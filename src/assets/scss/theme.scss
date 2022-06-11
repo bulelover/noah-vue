@@ -1,0 +1,452 @@
+@import "./themeMixin.scss";
+
+.app-title {
+  @include themeSetting($themes) {
+    color: themed('text-color');
+    background-color: themed('primary-color') !important;
+  }
+}
+
+.el-link.el-link--primary {
+  @include themeSetting($themes) {
+    color: themed('primary-color');
+  }
+}
+.el-link.el-link--primary:hover {
+  @include themeSetting($themes) {
+    color: themed('button-hover-color');
+  }
+}
+
+.el-button--primary:focus, .el-button--primary:hover {
+  @include themeSetting($themes) {
+    color: themed('primary-color');
+    border-color: themed('button-hover-color');
+    background-color: themed('light-color-2');
+  }
+}
+
+.el-button--primary, .el-button--primary:focus {
+  @include themeSetting($themes) {
+    border: 0;
+    color: themed('text-color');
+    background-color: themed('primary-color');
+    //border-color: themed('primary-color');
+  }
+}
+
+.el-button--primary.el-button--small, .el-button--primary.el-button--small.is-round {
+  @include themeSetting($themes) {
+    padding: 10px 15px;
+  }
+}
+
+.el-button--primary:hover {
+  @include themeSetting($themes) {
+    color: themed('text-color');
+    background-color: themed('button-hover-color');
+    border-color: themed('button-hover-color');
+  }
+}
+
+.el-button--primary.is-disabled, .el-button--primary.is-disabled:active, .el-button--primary.is-disabled:focus, .el-button--primary.is-disabled:hover {
+  @include themeSetting($themes) {
+    color: themed('text-color');
+    background-color: themed('button-disabled-color');
+    border-color: themed('button-disabled-color');
+  }
+}
+
+.el-button--primary.is-disabled, .el-button--primary.is-disabled:focus, .el-button--primary.is-disabled:hover {
+  @include themeSetting($themes) {
+    color: themed('text-color');
+    cursor: not-allowed;
+    background-image: none;
+    background-color: themed('button-disabled-color');
+    border-color: themed('button-disabled-color');
+  }
+}
+
+.el-menu-item.is-active {
+  @include themeSetting($themes) {
+    color: themed('primary-color');
+  }
+}
+
+.el-cascader-node.in-active-path, .el-cascader-node.is-active, .el-cascader-node.is-selectable.in-checked-path {
+  @include themeSetting($themes) {
+    color: themed('primary-color');
+  }
+}
+
+.el-switch.is-checked .el-switch__core {
+  @include themeSetting($themes) {
+    border-color: themed('primary-color');
+    background-color: themed('primary-color');
+  }
+}
+
+.el-pagination.is-background .el-pager li:not(.disabled).active {
+  @include themeSetting($themes) {
+    background-color: themed('primary-color');
+    color: themed('text-color');
+  }
+}
+
+.el-radio__input.is-checked .el-radio__inner {
+  @include themeSetting($themes) {
+    border-color: themed('primary-color');
+    background: themed('primary-color');
+  }
+}
+.el-radio__input.is-disabled.is-checked .el-radio__inner{
+  @include themeSetting($themes) {
+    background-color: themed('button-disabled-color');
+    border-color: themed('button-disabled-color');
+  }
+}
+.el-button--default:focus, .el-button--default:hover{
+  @include themeSetting($themes) {
+    color: themed('primary-color');
+    border-color: themed('light-color');
+    background-color: themed('light-color');
+  }
+}
+.el-button--primary:focus, .el-button--primary:hover {
+  @include themeSetting($themes) {
+    color: themed('text-color');
+    background-color: themed('button-hover-color');
+  }
+}
+
+.el-dialog__header {
+  @include themeSetting($themes) {
+    background-color: themed('primary-color');
+  }
+}
+
+.el-checkbox__input.is-checked .el-checkbox__inner, .el-checkbox__input.is-indeterminate .el-checkbox__inner {
+  @include themeSetting($themes) {
+    background-color: themed('primary-color');
+    border-color: themed('primary-color');
+  }
+}
+.el-checkbox__input.is-disabled.is-checked .el-checkbox__inner{
+  @include themeSetting($themes) {
+    background-color: themed('button-disabled-color');
+    border-color: themed('button-disabled-color');
+  }
+}
+
+.el-checkbox__input.is-checked + .el-checkbox__label {
+  @include themeSetting($themes) {
+    color: themed('primary-color');
+  }
+}
+
+.jp-content > .el-tabs > .el-tabs__header .el-tabs__item.is-active {
+  @include themeSetting($themes) {
+    color: themed('primary-color');
+    border-bottom: 2px solid themed('primary-color');
+  }
+}
+
+.el-menu-item:focus, .el-menu-item:hover {
+  @include themeSetting($themes) {
+    background-color: themed('light-color');
+  }
+}
+
+.el-submenu__title:hover {
+  @include themeSetting($themes) {
+    background-color: themed('light-color');
+  }
+}
+
+.el-select .el-input.is-focus .el-input__inner {
+  @include themeSetting($themes) {
+    border-color: themed('primary-color');
+  }
+}
+
+.el-input.is-focus .el-input__inner {
+  @include themeSetting($themes) {
+    border-color: themed('primary-color');
+  }
+}
+
+.el-select-dropdown__item.selected {
+  @include themeSetting($themes) {
+    color: themed('primary-color');
+  }
+}
+
+.el-button--text {
+  @include themeSetting($themes) {
+    color: themed('primary-color');
+    background: 0 0;
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
+.el-table__body tr.current-row > td {
+  @include themeSetting($themes) {
+    background-color: themed('light-color');
+  }
+}
+
+.el-tree--highlight-current .el-tree-node.is-current > .el-tree-node__content {
+  @include themeSetting($themes) {
+    background-color: themed('light-color');
+  }
+}
+
+.el-switch__label.is-active {
+  @include themeSetting($themes) {
+    color: themed('primary-color');
+  }
+}
+
+.el-tabs__item.is-active {
+  @include themeSetting($themes) {
+    color: themed('primary-color');
+  }
+}
+
+.el-tabs__nav-wrap::after {
+  @include themeSetting($themes) {
+    background-color: themed('light-color');
+  }
+}
+
+.el-tabs__item:hover {
+  @include themeSetting($themes) {
+    color: themed('primary-color');
+  }
+}
+
+.popover-level span.selected {
+  @include themeSetting($themes) {
+    background-color: themed('button-disabled-color') !important;
+  }
+}
+
+.el-radio__input.is-checked + .el-radio__label {
+  @include themeSetting($themes) {
+    color: themed('primary-color');
+  }
+}
+
+.el-dropdown-link {
+  @include themeSetting($themes) {
+    color: themed('primary-color');
+  }
+}
+
+.header-menu {
+  .el-dropdown-link {
+    @include themeSetting($themes) {
+      color: themed('text-color');
+    }
+  }
+}
+
+.from-title {
+  em {
+    @include themeSetting($themes) {
+      background: themed('primary-color');
+    }
+  }
+}
+
+.el-tabs__active-bar {
+  @include themeSetting($themes) {
+    background-color: themed('primary-color');
+  }
+}
+
+.el-dropdown-menu__item:not(.is-disabled):hover, .el-dropdown-menu__item:focus {
+  @include themeSetting($themes) {
+    background-color: themed('light-color');
+    color: themed('primary-color');
+  }
+}
+
+.el-input__inner:focus {
+  @include themeSetting($themes) {
+    border-color: themed('primary-color');
+  }
+}
+
+.el-textarea__inner:focus {
+  @include themeSetting($themes) {
+    outline: none;
+    border-color: themed('primary-color');
+  }
+}
+
+.el-form-item.el-input__inner:focus, .el-form-item .el-textarea__inner:focus {
+  @include themeSetting($themes) {
+    border-color: themed('primary-color');
+  }
+}
+
+.el-dialog__title,
+.el-dialog__headerbtn .el-dialog__close {
+  @include themeSetting($themes) {
+    color: themed('text-color');
+  }
+}
+
+.el-table .row-checked {
+  @include themeSetting($themes) {
+    color: themed('primary-color');
+  }
+}
+
+.el-pager li.active {
+  @include themeSetting($themes) {
+    color: themed('primary-color');
+  }
+}
+
+.menu-tag:hover{
+  @include themeSetting($themes) {
+    //color: themed('text-color');
+    //background-color: themed('button-disabled-color');
+    //border-color: themed('button-disabled-color');
+  }
+}
+.menu-tag:hover .el-tag__close{
+  @include themeSetting($themes) {
+    //color: themed('text-color');
+  }
+}
+
+.menu-tag.tag-selected {
+  @include themeSetting($themes) {
+    color: themed('primary-color');
+    //background-color: themed('button-hover-color');
+    //border-color: themed('button-hover-color');
+    //color: themed('primary-color');
+    //background-color: themed('light-color');
+    //border-color: themed('primary-color');
+  }
+}
+
+.tag-selected .el-tag__close{
+  @include themeSetting($themes) {
+    //color: themed('text-color');
+    //color: themed('primary-color');
+  }
+}
+.tag-selected .el-tag__close:hover{
+  @include themeSetting($themes) {
+    background-color: themed('primary-color');
+  }
+}
+.app-title {
+@include themeSetting($themes) {
+    background-color: themed('primary-color') !important;
+    color: themed('text-color');
+  }
+}
+
+.el-aside {
+  @include themeSetting($themes) {
+    background-color: #ffffff;
+  }
+}
+
+/* 框架大小 默认全屏 */
+.frame-lg {
+  .main-body{
+    max-width: 1650px;
+    margin: 10px auto;
+    border-radius: 10px;
+    overflow: auto;
+  }
+}
+
+.frame-mid {
+  .main-body{
+    max-width: 1440px;
+    margin: 10px auto;
+    border-radius: 10px;
+    overflow: auto;
+  }
+}
+.frame-sm {
+  .main-body{
+    max-width: 1280px;
+    margin: 10px auto;
+    border-radius: 10px;
+    overflow: auto;
+  }
+}
+
+/** 沉浸式菜单 */
+.menu-steep {
+  .el-aside{
+    .el-menu{
+      background-color: transparent;
+    }
+    .aside-content{
+      @include themeSetting($themes) {
+        background-color: themed('primary-color');
+      }
+    }
+    .el-submenu__title, .el-menu-item{
+      @include themeSetting($themes) {
+        background-color: themed('primary-color');
+        color: themed('text-color');
+      }
+    }
+    .el-menu-item:focus, .el-menu-item:hover {
+      background-color: rgb(255 255 255 / 0.2);
+    }
+    .el-submenu__title:hover{
+      background-color: rgb(255 255 255 / 0.2);
+    }
+    .el-submenu__title i{
+      @include themeSetting($themes) {
+        color: themed('text-color');
+      }
+    }
+    .el-menu-item.is-active {
+      @include themeSetting($themes) {
+        color: themed('text-color');
+        font-weight: bold;
+        background-color: rgb(255 255 255 / 0.2);
+      }
+    }
+  }
+  .el-container{
+    @include themeSetting($themes) {
+      background-color: themed('light-color-2');
+    }
+  }
+  .page-wrapper,.main-body,.el-main,.el-tag--plain.el-tag--info{
+    @include themeSetting($themes) {
+      background-color: transparent;
+      //background-color: themed('button-disabled-color');
+    }
+  }
+  .top-recent-tags{
+    background-color: rgba(255, 255, 255, 0.4) !important;
+  }
+}
+
+/* 纯白主题适配 */
+.white-theme {
+  .app-title {
+    background-color: #FFFFFF !important;
+    color: #333333;
+    border-bottom: 1px solid #EEEEEE;
+  }
+  .header-menu .el-dropdown-link {
+    color: #333333;
+  }
+}
+

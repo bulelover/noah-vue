@@ -1,0 +1,137 @@
+<template>
+  <el-dialog :title="title"
+             :append-to-body="true"
+             :visible.sync="visible"
+             :close-on-click-modal="false"
+             :close-on-press-escape="false"
+             :before-close="close"
+             width="900px"
+             v-dialog-drag>
+    <div class="form-container same-padding" v-loading="loading">
+<!--      <el-tree ref="tree"-->
+<!--          :data="menus"-->
+<!--          show-checkbox-->
+<!--          node-key="id"-->
+<!--          :default-checked-keys="selected">-->
+<!--      </el-tree>-->
+      <el-cascader-panel v-if="visible" ref="tree" v-model="selected" :options="menus"
+                         :props="{ multiple: true, checkStrictly: true, value: 'id' }">
+        <template v-slot="{ node, data }">
+          <span>{{ data.label }}</span>
+          <span v-if="!node.isLeaf"> ({{ data.children.length }}) </span>
+        </template>
+      </el-cascader-panel>
+    </div>
+    <div slot="footer" class="dialog-footer">
+      <el-button :disabled="loading" type="primary" @click="save" :loading="saveLoading">保存</el-button>
+      <el-button :disabled="loading || saveLoading" @click="close">取消</el-button>
+    </div>
+  </el-dialog>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      visible: false,
+      loading: false,
+      saveLoading: false,
+      id: '',
+      title: '角色授权',
+      menus: [],
+      selected: [],
+    }
+  },
+  methods: {
+    init(id){
+      this.id = id;
+      this.visible = true;
+      this.loading = true;
+      this.$api.sysRoleGetMenusByRoleId({
+        data: {
+          id: this.id
+        },
+        callback: d => {
+          this.loading = false;
+          this.menus = d.menus;
+          let parent = {};
+          let setData = function (root, pId){
+            root.forEach((item) => {
+              if(!g.isEmpty(pId)){
+                parent[item.id] = pId;
+              }
+              if(item.children && item.children.length === 0){
+                item.children = null;
+              }
+              if(item.children && item.children.length > 0){
+                setData(item.children, item.id);
+              }
+            });
+          }
+          setData(this.menus);
+          let setOptions = (id, arr) => {
+            if(parent[id]){
+              arr.unshift(id);
+              setOptions(parent[id],arr);
+            }else {
+              arr.unshift(id);
+            }
+          }
+          if(d.selected && d.selected.length>0){
+            d.selected.forEach(id => {
+              let arr = [];
+              setOptions(id, arr);
+              this.selected.push(arr);
+            })
+          }
+        },
+        failure: e => {
+          this.loading = false;
+        }
+      });
+    },
+    save() {
+      let checkedKeys = '';
+      let cks = this.$refs.tree.getCheckedNodes();
+      if(cks && cks.length > 0){
+        cks.forEach(item => {
+          checkedKeys += ','+item.value;
+        })
+        checkedKeys = checkedKeys.substring(1);
+      }
+      this.saveLoading = true;
+      this.$api.sysRoleSaveRoleMenu({
+        data: {
+          id: this.id,
+          menuIds: checkedKeys
+        },
+        callback: (d, msg) => {
+          this.$message.success(msg);
+          this.saveLoading = false;
+          this.close();
+        },
+        failure: e => {
+          this.saveLoading = false;
+        }
+      });
+      
+    },
+    close() {
+      this.visible = false;
+      //延时销毁form表单
+      setTimeout(()=>{
+        this.$parent.authVisible = false;
+      },g.destroyTimeout)
+    }
+  }
+}
+</script>
+
+<style scoped lang="scss">
+  ::v-deep .el-dialog{
+    max-height: 550px;
+    .el-cascader-menu__wrap{
+      height: 380px;
+    }
+  }
+</style>
