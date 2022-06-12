@@ -37,7 +37,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
   .el-menu--collapse>div>.el-menu-item span:not(.i-icon), .el-menu--collapse>div>.el-submenu>.el-submenu__title span:not(.i-icon) {
     height: 0;
     width: 0;

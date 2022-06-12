@@ -23,7 +23,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 a {
   color: #42b983;
 }

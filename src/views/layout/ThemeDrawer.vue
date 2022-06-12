@@ -17,9 +17,9 @@
     </el-row>
     <el-row>
       <el-col :span="12"><el-checkbox v-model="checked" @change="setMultiTab">显示页签</el-checkbox></el-col>
-      <el-col :span="12"><el-checkbox v-model="whiteV" @change="setPosition">显示位置</el-checkbox></el-col>
+      <el-col :span="12"><el-checkbox v-model="positionV" @change="setPosition">显示位置</el-checkbox></el-col>
       <el-col :span="12"><el-checkbox v-model="steepV" @change="setSteep">沉浸式主题</el-checkbox></el-col>
-      <el-col :span="12"><el-checkbox v-model="positionV" @change="setWhite">白色背景</el-checkbox></el-col>
+      <el-col :span="12"><el-checkbox v-model="whiteV" @change="setWhite">白色背景</el-checkbox></el-col>
     </el-row>
   </el-drawer>
 </template>

@@ -164,12 +164,5 @@ export default {
 }
 </script>
 
-<style scoped>
-/* 修正上下级列对齐 */
-::v-deep(.el-table__placeholder) {
-  margin-right: 3px;
-}
-.el-table .el-button--small.el-button--text{
-  padding: 0 8px;
-}
+<style scoped lang="scss">
 </style>

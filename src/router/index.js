@@ -17,7 +17,8 @@ VueRouter.prototype.push = function push(location, onComplete, onAbort) {
 Vue.use(VueRouter);
 
 const router = new VueRouter({
-  mode: 'history',
+  // mode: 'history',
+  mode: 'hash',
   routes: [
     {
       name: 'admin', path: '/admin', component: Main,
@@ -43,7 +44,6 @@ const router = new VueRouter({
   ]
 });
 g.router['/admin/home'] = g.home;
-let initMenu = false;
 
 let formatMenus = function (data) {
   /* 处理数据 */
@@ -87,7 +87,7 @@ let formatMenus = function (data) {
 }
 
 router.beforeEach((to, from, next) => {
-  if(initMenu || to.name === 'login'){
+  if(store.state.initMenu || to.name === 'login'){
     next()
     return;
   }
@@ -103,7 +103,7 @@ router.beforeEach((to, from, next) => {
         callback: data => {
           let menus = formatMenus(data);
           store.setMenus(menus);
-          initMenu = true;
+          store.setInitMenu(true);
           next({...to, replace: true})
         },
         failure: () => {

@@ -123,7 +123,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
   ::v-deep .el-dialog{
     height: 386px;
   }

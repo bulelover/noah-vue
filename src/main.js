@@ -8,7 +8,6 @@ import {IconPark} from '@icon-park/vue/es/all';
 import '@icon-park/vue/styles/index.css';
 Vue.use(ElementUI,{ size: 'medium'});
 Vue.component('icon', IconPark);
-
 Vue.prototype.g = window.g;
 //设置主题
 document.body.classList.add(g.theme);

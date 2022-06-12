@@ -9,13 +9,9 @@ module.exports = {
   publicPath: '/',
   // 输出文件目录
   outputDir: 'dist',
-  // 是否使用包含运行时编译器的 Vue 构建版本
-  runtimeCompiler: false,
   // 生产环境是否生成 sourceMap 文件
   productionSourceMap: false,
-  // 生成的 HTML 中的 <link rel="stylesheet"> 和 <script> 标签上启用 Subresource Integrity (SRI)
-  integrity: false,
-  transpileDependencies: ['element-ui'],
+  // transpileDependencies: ['element-ui', 'vue-cropper'],
   // webpack相关配置
   chainWebpack: (config) => {
     config.resolve.symlinks(true);
@@ -36,9 +32,9 @@ module.exports = {
   // css相关配置
   css: {
     // 是否分离css（插件ExtractTextPlugin）
-    extract: isProduction,
-    // 是否开启 CSS source maps
-    sourceMap: true,
+    // extract: isProduction,
+    // // 是否开启 CSS source maps
+    // sourceMap: true,
     loaderOptions: {
       less: {
         modifyVars: {
@@ -70,5 +66,6 @@ module.exports = {
     }
     // 下边这个， 如果你是本地自己mock 的话用after这个属性，线上环境一定要干掉
     // after: require("./mock/mock-server.js")
-  }
+  },
+  lintOnSave: undefined
 }

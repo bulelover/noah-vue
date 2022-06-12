@@ -222,11 +222,6 @@ export default {
 </script>
 
 <style scoped lang="scss">
-/* 修正上下级列对齐 */
-::v-deep(.el-table__placeholder) {
-  margin-right: 3px;
-}
-
 .infinite-list {
   margin: 0;
   padding: 0;

@@ -131,12 +131,6 @@ export default {
     this.show = false;
     this.pageKey[g.home.code] = 0;
     this.menus = this.state.menus;
-    if (this.$route.name === 'home' || this.$route.name === 'error') {
-      //默认展开第一个菜单
-      this.$nextTick(() => {
-        $('.el-submenu__title:eq(0)').trigger('click')
-      })
-    }
   },
   
   mounted() {
@@ -162,6 +156,12 @@ export default {
     //标签栏自适应显示滑动条
     window.onresize = () => {
       this.setHaScroll()
+    }
+    if (this.$route.name === g.home.c || this.$route.name === 'error') {
+      //默认展开第一个菜单
+      this.$nextTick(() => {
+        $('.el-submenu__title:eq(0)').trigger('click')
+      })
     }
   },
   

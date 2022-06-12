@@ -97,7 +97,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-::v-deep(.el-header) {
+::v-deep .el-header {
   padding: 0;
   border-bottom: 1px solid #ebeef5;
   overflow: hidden;

@@ -23,6 +23,8 @@
             <el-link type="primary" v-if="$hasAuth('sys-menu-view')" :underline="false"
                   @click="view(row)">{{ row.name }}</el-link>
             <template v-else>{{ row.name }}</template>
+            <i v-if="treeMaps.get(row.id)" class="el-icon-refresh" style="cursor: pointer;margin-left: 10px;"
+               @click="refreshLoadTree(row.id)"></i>
           </template>
         </el-table-column>
         <el-table-column prop="code" label="菜单编码" min-width="220" show-overflow-tooltip></el-table-column>
@@ -62,7 +64,7 @@
         </el-table-column>
       </el-table>
     </div>
-    <edit v-if="editVisible" ref="edit"></edit>
+    <edit v-if="editVisible" ref="edit" @refresh="refreshLoadTree"></edit>
   </div>
 </template>
 
@@ -98,6 +100,7 @@ export default {
       refreshTable: true,
       editVisible: false,
       tableLoading: false,
+      treeMaps: new Map(),
       tableData: [],
       total: 0
     }
@@ -122,6 +125,8 @@ export default {
         this.refreshTable = true;
       });
       this.tableLoading = true;
+      //重置树变量存储
+      this.treeMaps = new Map();
       if (g.isEmpty(this.searchForm.search)) {
         this.$api.sysMenuChildren({
           data: {
@@ -156,9 +161,26 @@ export default {
           pid: tree.id
         },
         callback: data => {
+          this.treeMaps.set(tree.id, { tree, treeNode, resolve });
           resolve(data);
         }
       });
+    },
+    refreshLoadTree(pId) {
+      if(!this.treeMaps.get(pId)){
+        return;
+      }
+      // 根据更改节点的父ID取出相应数据
+      const { tree, treeNode, resolve } = this.treeMaps.get(pId);
+      this.$set(this.$refs.table.store.states.lazyTreeNodeMap, pId, []);
+      if (tree) {
+        //设置表格内部loading状态
+        this.$refs.table.store.states.treeData[tree.id].loading = true;
+        this.$refs.table.store.states.treeData[tree.id].expanded = false;
+        this.$refs.table.store.states.treeData[tree.id].loaded = false;
+        // 将取出对应数据再传给load方法
+        this.load(tree, treeNode, resolve);
+      }
     },
     edit(row) {
       this.editVisible = true;
@@ -167,6 +189,7 @@ export default {
       })
     },
     view(row) {
+      console.log(this.tableData)
       this.editVisible = true;
       this.$nextTick(()=>{
         this.$refs.edit.init('view', row.id);
@@ -192,7 +215,7 @@ export default {
           },
           callback: data => {
             this.$message.success('删除成功!');
-            this.fetchData();
+            this.refreshLoadTree(row.parentId);
           }
         });
       }).catch(e => {
@@ -233,13 +256,9 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 /* 修正上下级列对齐 */
-::v-deep(.el-table__placeholder) {
+::v-deep .el-table__placeholder  {
   margin-right: 3px;
-}
-
-.el-table .el-button--small.el-button--text {
-  padding: 0 8px;
 }
 </style>

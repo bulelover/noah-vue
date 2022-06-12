@@ -25,7 +25,7 @@
         <el-pagination layout="total, sizes, prev, pager, next, jumper" :total="total"
                        :current-page.sync="searchForm.current"
                        :page-sizes="[10, 20, 50, 100]"
-                       :page-size="searchForm.size"
+                       :page-size.sync="searchForm.size"
                        @size-change="fetchData"
                        @current-change="fetchData"
         ></el-pagination>
@@ -101,12 +101,5 @@ export default {
 }
 </script>
 
-<style scoped>
-/* 修正上下级列对齐 */
-::v-deep(.el-table__placeholder) {
-  margin-right: 3px;
-}
-.el-table .el-button--small.el-button--text{
-  padding: 0 8px;
-}
+<style scoped lang="scss">
 </style>

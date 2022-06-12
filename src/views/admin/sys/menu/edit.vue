@@ -71,6 +71,7 @@ export default {
       title: '',
       page: '',
       loadParent: false,
+      oldParentId: null,
       form: {
         id: '',
         code: '',
@@ -123,6 +124,7 @@ export default {
           callback: d => {
             this.loading = false;
             this.form = d;
+            this.oldParentId = d.parentId;
           },
           failure: e => {
             this.loading = false;
@@ -162,6 +164,10 @@ export default {
         callback: (d, msg) => {
           this.$message.success(msg);
           this.saveLoading = false;
+          this.$emit('refresh', this.form.parentId)
+          if(this.oldParentId !== null && this.oldParentId !== this.form.parentId){
+            this.$emit('refresh', this.oldParentId)
+          }
           this.close();
         },
         failure: e => {
@@ -194,7 +200,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 ::v-deep .el-input-group__prepend{
   width: 40px;
   padding: 0;
