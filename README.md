@@ -1,7 +1,18 @@
 ## 设置镜像下载依赖
 ```
+1. 安装 node.js v13
 
+2. 设置镜像
 npm config set registry http://registry.npm.taobao.org/
+npm config set sass_binary_site=https://npm.taobao.org/mirrors/node-sass
+
+3. 安装python 2.7
+https://www.python.org/downloads/
+https://www.python.org/ftp/python/2.7.18/python-2.7.18.amd64.msi
+
+4. 设置 ExecutionPolicy
+用管理员权限打开 Windows PowerShell，执行下面的命令，并选择A，表示全部更改。
+set-ExecutionPolicy RemoteSigned
 
 npm install
 
