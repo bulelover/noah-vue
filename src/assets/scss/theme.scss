@@ -448,5 +448,15 @@
   .header-menu .el-dropdown-link {
     color: #333333;
   }
+  .el-dialog__header{
+    background-color: #FFFFFF;
+    border-bottom: 1px solid #EEEEEE;
+    .el-dialog__title{
+      color: #333333;
+    }
+    .el-dialog__headerbtn .el-dialog__close {
+      color: #909399;
+    }
+  }
 }
 

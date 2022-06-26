@@ -14,6 +14,7 @@
       <el-col :span="12"><div @click="setThemeColor('theme-black')"><span class="theme-span" style="background-color: rgba(18, 18, 18, 0.9);"></span> 黑色系</div></el-col>
       <el-col :span="12"><div @click="setThemeColor('theme-dark-blue')"><span class="theme-span" style="background-color: rgb(11, 99, 192);"></span> 深邃蓝</div></el-col>
       <el-col :span="12"><div @click="setThemeColor('theme-purple')"><span class="theme-span" style="background-color: rgb(165, 82, 192);"></span> 轻柔紫</div></el-col>
+      <el-col :span="12"><div @click="setThemeColor('theme-orangered')"><span class="theme-span" style="background-color: rgb(243, 104, 56);"></span> 橘子红</div></el-col>
     </el-row>
     <el-row>
       <el-col :span="12"><el-checkbox v-model="checked" @change="setMultiTab">显示页签</el-checkbox></el-col>
@@ -58,7 +59,15 @@ export default {
     },
     setWhite(v){
       g.setWhite(v?'1':'0');
-      this.$emit('update', 'white', v);
+      if(v){
+        document.body.classList.add('white-theme');
+      }else {
+        for(let i=document.body.classList.length; i>0; i--){
+          if(document.body.classList[i-1].indexOf('white-theme') === 0){
+            document.body.classList.remove(document.body.classList[i-1]);
+          }
+        }
+      }
     },
     setPosition(v){
       g.setPosition(v?'1':'0');

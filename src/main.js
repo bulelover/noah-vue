@@ -8,8 +8,10 @@ import {IconPark} from '@icon-park/vue/es/all';
 import '@icon-park/vue/styles/index.css';
 Vue.use(ElementUI,{ size: 'medium'});
 Vue.component('icon', IconPark);
-Vue.prototype.g = window.g;
 //设置主题
+if(g.white === '1'){
+  document.body.classList.add('white-theme');
+}
 document.body.classList.add(g.theme);
 document.body.classList.add(g.frame);
 
@@ -31,11 +33,11 @@ Vue.use(tools);
 require('es6-promise').polyfill();
 require('es6-promise/auto');
 
-new Vue({
+let vm = new Vue({
   el: '#app',
   router,
   store,
   render: h => h(App)
 });
-
+export default vm
 

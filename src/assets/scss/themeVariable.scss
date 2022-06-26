@@ -56,4 +56,12 @@ $themes: (
                 light-color-2          : rgba(165, 82, 192, 0.2),
                 light-color            : rgba(165, 82, 192, 0.1),
         ),
+        orangered: (
+                primary-color          : rgba(243, 104, 56, 1),
+                text-color             : #ffffff,
+                button-disabled-color  : rgba(243, 104, 56, 0.6),
+                button-hover-color     : rgba(243, 104, 56, 0.8),
+                light-color-2          : rgba(243, 104, 56, 0.2),
+                light-color            : rgba(243, 104, 56, 0.1),
+        ),
 );

@@ -10,7 +10,7 @@
           </el-form>
         </div>
         <div>
-          <el-button v-if="$hasAuth('sys-role-add')" type="primary" @click="add">新增</el-button>
+          <el-button v-if="$perms.has('sys-role-add')" type="primary" @click="add">新增</el-button>
         </div>
         <!--      <el-checkbox v-model="multiple" label="多选" style="margin-left: 10px"></el-checkbox>-->
       </div>
@@ -20,7 +20,7 @@
                          :index="(searchForm.current-1)*searchForm.size+1"></el-table-column>
         <el-table-column prop="name" label="菜单名称" min-width="220" show-overflow-tooltip>
           <template v-slot="{row}">
-            <el-link type="primary" v-if="$hasAuth('sys-menu-view')" :underline="false"
+            <el-link type="primary" v-if="$perms.has('sys-menu-view')" :underline="false"
                   @click="view(row)">{{ row.name }}</el-link>
             <template v-else>{{ row.name }}</template>
             <i v-if="treeMaps.get(row.id)" class="el-icon-refresh" style="cursor: pointer;margin-left: 10px;"
@@ -37,7 +37,7 @@
         </el-table-column>
         <el-table-column prop="state" label="状态" min-width="80" align="center">
           <template v-slot="{row}">
-            <template v-if="$hasAuth('sys-menu-state')">
+            <template v-if="$perms.has('sys-menu-state')">
               <el-switch v-model="row.state" active-value="1" inactive-value="0"
                          @change="changeState($event, row)"></el-switch>
             </template>
@@ -56,11 +56,11 @@
         </el-table-column>
         <el-table-column prop="orderBy" label="排序" min-width="80" align="right"></el-table-column>
         <el-table-column label="操作" min-width="200" class-name="link-menu" fixed="right"
-          v-if="$hasAuth('sys-menu-edit') || $hasAuth('sys-menu-add') || $hasAuth('sys-menu-delete')">
+          v-if="$perms.has('sys-menu-edit') || $perms.has('sys-menu-add') || $perms.has('sys-menu-delete')">
           <template v-slot="{row}">
-            <el-link v-if="$hasAuth('sys-menu-edit')" @click="edit(row)" type="primary" :underline="false">修改</el-link>
-            <el-link v-if="$hasAuth('sys-menu-add')" @click="addChild(row)" type="primary" :underline="false">添加下级</el-link>
-            <el-link v-if="$hasAuth('sys-menu-delete')" @click="remove(row)" type="danger" :underline="false">删除</el-link>
+            <el-link v-if="$perms.has('sys-menu-edit')" @click="edit(row)" type="primary" :underline="false">修改</el-link>
+            <el-link v-if="$perms.has('sys-menu-add')" @click="addChild(row)" type="primary" :underline="false">添加下级</el-link>
+            <el-link v-if="$perms.has('sys-menu-delete')" @click="remove(row)" type="danger" :underline="false">删除</el-link>
           </template>
         </el-table-column>
       </el-table>

@@ -1,86 +1,14 @@
 import $ from 'jquery'
+import Vue from "vue";
 function getPublicIp(ip){
   $('body').append('<script src="http://whois.pconline.com.cn/ipJson.jsp?ip='+ip+'&callback=getIpCallback"></script>');
 }
 function install(Vue, options = {}) {
   //权限校验方法
-  let permissions = [];
-  Vue.prototype.$hasAuth = function (code){
-    if(permissions && permissions.length > 0){
-      return permissions.indexOf(code) > -1;
-    }
-    let str = localStorage.getItem(g.permissions);
-    if(str && str.substring(0,1) === '['){
-      permissions = JSON.parse(str);
-      return permissions.indexOf(code) > -1;
-    }
-    return false;
-  }
-
+  let permissions;
   //字典缓存
   let dictionary = {};
-  Vue.prototype.$dict ={
-    list: function (dictCode){
-      if(dictionary && dictionary.length > 0){
-        return dictionary[dictCode];
-      }
-      let str = localStorage.getItem(g.dictionary);
-      if(str && str.substring(0,1) === '{'){
-        dictionary = JSON.parse(str);
-        return dictionary[dictCode];
-      }
-    },
-    name: function (dictCode, itemCode){
-      if(dictionary && dictionary.length > 0 && dictionary[dictCode]){
-        let s = dictionary[dictCode].filter(item => item.code == itemCode);
-        return s && s.length === 1?s[0].name: '--';
-      }
-      let str = localStorage.getItem(g.dictionary);
-      if(str && str.substring(0,1) === '{'){
-        dictionary = JSON.parse(str);
-        if(!dictionary[dictCode]){
-          return '--';
-        }
-        let s = dictionary[dictCode].filter(item => item.code == itemCode);
-        return s && s.length === 1?s[0].name: '--';
-      }
-    }
-  }
 
-  Vue.prototype.$tools = {
-    /**
-     * file图片文件转base64
-     * @param {*} img file文件或者blob
-     * @param {*} callback function (imgurl)通过参数获得base64
-     */
-    getBase64 : function (img, callback){
-      const reader = new FileReader()
-      reader.addEventListener('load', () => callback(reader.result))
-      reader.readAsDataURL(img)
-    }
-  }
-
-  let isEmpty = function (value){
-    return value === '' || value === null || value === undefined;
-  }
-
-  //表单校验函数
-  Vue.prototype.$valid = {
-    checkPhone : function (rule, value, callback){
-      if(isEmpty(value)){callback();return;}
-      //座机号码
-      let tel = /^(0d{2,3})-?(d{7,8})$/;
-      //手机号码  严格规则 /^(13[0-9]|14[01456879]|15[0-3,5-9]|16[2567]|17[0-8]|18[0-9]|19[0-3,5-9])d{8}$/
-      let phone = /^(1[0-9][0-9])d{8}$/;
-      if(phone.test(value)) {
-        callback()
-      }else if(tel.test(value)){
-        callback()
-      }else {
-        callback(new Error("请输入正确的电话号码"))
-      }
-    }
-  }
   let f = function (_this){
     let parent = _this.parentElement;
     if(parent && (parent.nodeName === 'TR')){
@@ -92,7 +20,6 @@ function install(Vue, options = {}) {
     return null;
   }
 
-  //表单校验函数
   Vue.prototype.$table = {
     watchMultipleCbx: function (rowClass, val,  _this, opts){
       if(!opts){
@@ -196,12 +123,83 @@ function install(Vue, options = {}) {
     }
   }
 
+  const toolFunctions = {
+    /**
+     * file图片文件转base64
+     * @param {*} img file文件或者blob
+     * @param {*} callback function (imgurl)通过参数获得base64
+     */
+    getBase64 : function (img, callback){
+      const reader = new FileReader()
+      reader.addEventListener('load', () => callback(reader.result))
+      reader.readAsDataURL(img)
+    }
+  }
+  window.g = {
+    ...toolFunctions,
+    ...window.g
+  }
+  Vue.prototype.g = window.g;
+
   //解决大部分滚动条问题（单个页面不包含内部多标签页的形式）
   //主题定制
   Vue.mixin({
     data(){
       return {
+
       }
+    },
+    computed: {
+      $perms(){
+        return {
+          has: function (code){
+            if(permissions && permissions.length > 0){
+              return permissions.indexOf(code) > -1;
+            }
+            let str = localStorage.getItem(g.permissions);
+            if(str && str.substring(0,1) === '['){
+              permissions = JSON.parse(str);
+              return permissions.indexOf(code) > -1;
+            }
+            return false;
+          },
+          empty() {
+            permissions = []
+          }
+        }
+      },
+      $dict(){
+        return {
+          list: function (dictCode){
+            if(dictionary && dictionary.length > 0){
+              return dictionary[dictCode];
+            }
+            let str = localStorage.getItem(g.dictionary);
+            if(str && str.substring(0,1) === '{'){
+              dictionary = JSON.parse(str);
+              return dictionary[dictCode];
+            }
+          },
+          name: function (dictCode, itemCode){
+            if(dictionary && dictionary.length > 0 && dictionary[dictCode]){
+              let s = dictionary[dictCode].filter(item => item.code == itemCode);
+              return s && s.length === 1?s[0].name: '--';
+            }
+            let str = localStorage.getItem(g.dictionary);
+            if(str && str.substring(0,1) === '{'){
+              dictionary = JSON.parse(str);
+              if(!dictionary[dictCode]){
+                return '--';
+              }
+              let s = dictionary[dictCode].filter(item => item.code == itemCode);
+              return s && s.length === 1?s[0].name: '--';
+            }
+          },
+          empty(){
+            dictionary = {}
+          }
+        }
+      },
     },
     mounted: function () {
       if (this.$el && $(this.$el).is('div.page-wrapper')) {

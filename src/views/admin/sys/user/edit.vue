@@ -47,6 +47,7 @@
 
 <script>
 import SysUserApi from './'
+import validate from "@/utils/validate";
 export default {
   data() {
     return {
@@ -59,7 +60,7 @@ export default {
       rules:{
         loginName: [{required:true, trigger: 'blur', message: '不能为空'}],
         realName: [{required:true, trigger: 'blur', message: '不能为空'}],
-        phone: [{validator: this.$valid.checkPhone, trigger: 'blur'}]
+        phone: [{validator: validate.checkPhone, trigger: 'blur'}]
       },
       form: {
         id: '',

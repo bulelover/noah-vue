@@ -1,5 +1,5 @@
 <template>
-  <el-container :class="{'main-body':true,'menu-steep':steep && !white, 'white-theme':white}" >
+  <el-container :class="{'main-body':true,'menu-steep':steep && !white}" >
     <el-header style="height:60px;overflow:hidden;position:relative;">
       <div style="position: absolute;top:0;right: 0;left: 0;" :z-index="90">
         <div class="app-title">
@@ -157,12 +157,7 @@ export default {
     window.onresize = () => {
       this.setHaScroll()
     }
-    if (this.$route.name === g.home.c || this.$route.name === 'error') {
-      //默认展开第一个菜单
-      this.$nextTick(() => {
-        $('.el-submenu__title:eq(0)').trigger('click')
-      })
-    }
+
   },
   
   computed: {

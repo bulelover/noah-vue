@@ -15,7 +15,7 @@
           </el-form>
         </div>
         <div>
-          <el-button v-if="$hasAuth('sys-user-add')" type="primary" @click="add">新增</el-button>
+          <el-button v-if="$perms.has('sys-user-add')" type="primary" @click="add">新增</el-button>
         </div>
         <!--      <el-checkbox v-model="multiple" label="多选" style="margin-left: 10px"></el-checkbox>-->
       </div>
@@ -38,7 +38,7 @@
                          :index="(searchForm.current-1)*searchForm.size+1"></el-table-column>
         <el-table-column prop="realName" label="真实姓名" min-width="120">
           <template v-slot="{row}">
-            <el-link type="primary" v-if="$hasAuth('sys-user-view')"
+            <el-link type="primary" v-if="$perms.has('sys-user-view')"
                   :underline="false" @click="view(row)">{{ row.realName }}</el-link>
             <template v-else>{{ row.realName }}</template>
           </template>
@@ -53,7 +53,7 @@
         <el-table-column prop="phone" label="联系电话" min-width="120"></el-table-column>
         <el-table-column label="状态" min-width="120">
           <template v-slot="{row}">
-            <template v-if="$hasAuth('sys-user-state')">
+            <template v-if="$perms.has('sys-user-state')">
               <span class="pointer primary-hover" @click.stop="changeState(row)"
                     :title="row.state === '1'?'点击停用':'点击启用'">
                 <i :class="['mr6', row.loading?'el-icon-loading':(row.state === '1'?'el-icon-success success':'el-icon-remove danger')]"></i
@@ -68,12 +68,14 @@
         </el-table-column>
         <el-table-column prop="position" label="岗位" min-width="150" show-overflow-tooltip></el-table-column>
         <el-table-column prop="mail" label="电子邮箱" min-width="150" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="mail" label="操作" width="200" class-name="link-menu" fixed="right">
+        <el-table-column prop="mail" label="操作" :width="toolbarWidth" class-name="link-menu" fixed="right"
+          v-if="toolbarWidth > 0">
           <template v-slot="{row}">
-            <el-link v-if="$hasAuth('sys-user-edit')" :underline="false" type="primary" @click="edit(row)">修改</el-link>
-            <el-link v-if="$hasAuth('sys-user-role')" :underline="false" type="primary" @click="assignRoles(row)">分配角色
+            <el-link v-if="$perms.has('sys-user-edit')" :underline="false" type="primary" @click="edit(row)">修改</el-link>
+            <el-link v-if="$perms.has('sys-user-role')" :underline="false" type="primary" @click="assignRoles(row)">
+              分配角色
             </el-link>
-            <el-link v-if="$hasAuth('sys-user-delete')" :underline="false" type="danger" @click="del(row)">删除</el-link>
+            <el-link v-if="$perms.has('sys-user-delete')" :underline="false" type="danger" @click="del(row)">删除</el-link>
           </template>
         </el-table-column>
       </el-table>
@@ -129,6 +131,20 @@ export default {
       assignRolesVisible: false,
       selectRow: null,
       tableData: [],
+    }
+  },
+  computed:{
+    toolbarWidth(){
+      let perms = [
+          [this.$perms.has('sys-user-edit'), 60],
+          [this.$perms.has('sys-user-role'), 90],
+          [this.$perms.has('sys-user-delete'), 60],
+        ],
+        width = 0;
+      perms.forEach(v => {
+        if(v[0]) width += v[1];
+      })
+      return width;
     }
   },
   watch: {

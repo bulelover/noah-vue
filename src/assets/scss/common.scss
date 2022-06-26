@@ -96,6 +96,8 @@ body, table{
   margin: -10px auto 0 !important;
   min-height: 300px;
   max-height: 90%;
+  border-radius: 6px;
+  overflow: hidden;
   .el-dialog__body {
     height: calc(100% - 108px);
     overflow: auto;
@@ -110,7 +112,7 @@ body, table{
     right: 15px;
   }
   .el-dialog__footer {
-    border-top: 1px solid #f1f1f1;
+    border-top: 1px solid #EEEEEE;
     padding: 12px 18px 12px;
     text-align: right;
     box-sizing: border-box;
@@ -229,7 +231,7 @@ span.page-title{
 .white-box{
   background-color: #ffffff;
   padding: 16px;
-  border-radius: 4px;
+  border-radius: 6px;
 }
 .full-height{
   height: 100%;

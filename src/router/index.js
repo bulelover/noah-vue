@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import vm from '../main'
 import VueRouter from 'vue-router'
 import Main from "@/views/Main";
 import $ from "jquery";
@@ -94,6 +95,11 @@ router.beforeEach((to, from, next) => {
   if (!g.tokenValue) {
     next({name: 'login'})
     return;
+  }
+  //清除权限、字典
+  if(vm){
+    vm.$perms.empty();
+    vm.$dict.empty();
   }
   $api.getLoginData({
     callback:(res) => {

@@ -7,6 +7,8 @@
 </template>
 
 <script>
+import $ from "jquery";
+
 export default {
   data() {
     return {
@@ -15,7 +17,13 @@ export default {
   },
 
   created() {
-  
+
+  },
+  mounted() {
+    //默认展开第一个菜单
+    this.$nextTick(() => {
+      $('.el-submenu__title:eq(0)').trigger('click')
+    })
   }
 }
 </script>

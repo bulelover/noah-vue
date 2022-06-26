@@ -95,6 +95,7 @@
 import SysUserApi from './'
 import store from '@/utils/store'
 import { VueCropper }  from 'vue-cropper'
+import validate from "@/utils/validate";
 export default {
   components: {
     VueCropper
@@ -108,7 +109,7 @@ export default {
       rules:{
         loginName: [{required:true, trigger: 'blur', message: '不能为空'}],
         realName: [{required:true, trigger: 'blur', message: '不能为空'}],
-        phone: [{validator: this.$valid.checkPhone, trigger: 'blur'}]
+        phone: [{validator: validate.checkPhone, trigger: 'blur'}]
       },
       state: store.state,
       imageUrl: '',

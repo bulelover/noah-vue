@@ -14,8 +14,11 @@
 <!--          node-key="id"-->
 <!--          :default-checked-keys="selected">-->
 <!--      </el-tree>-->
-      <el-cascader-panel v-if="visible" ref="tree" v-model="selected" :options="menus"
-                         :props="{ multiple: true, checkStrictly: true, value: 'id' }">
+      <div style="text-align: right;margin-bottom: 10px;">
+        开启级联选择，一般第一次设置权限时使用：<el-switch v-model="checkCascade" @change="checkCascadeChange"></el-switch>
+      </div>
+      <el-cascader-panel v-if="panelShow" ref="tree" v-model="selected" :options="menus"
+                         :props="{ multiple: true, checkStrictly: !checkCascade, value: 'id' }">
         <template v-slot="{ node, data }">
           <span>{{ data.label }}</span>
           <span v-if="!node.isLeaf"> ({{ data.children.length }}) </span>
@@ -37,6 +40,8 @@ export default {
       visible: false,
       loading: false,
       saveLoading: false,
+      checkCascade: false,
+      panelShow: true,
       id: '',
       title: '角色授权',
       menus: [],
@@ -44,6 +49,12 @@ export default {
     }
   },
   methods: {
+    checkCascadeChange(){
+      this.panelShow = false;
+      this.$nextTick(()=>{
+        this.panelShow = true;
+      })
+    },
     init(id){
       this.id = id;
       this.visible = true;
@@ -128,7 +139,6 @@ export default {
 
 <style scoped lang="scss">
   ::v-deep .el-dialog{
-    max-height: 550px;
     .el-cascader-menu__wrap{
       height: 380px;
     }
