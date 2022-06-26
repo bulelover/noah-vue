@@ -53,6 +53,7 @@
 </template>
 
 <script>
+import SysMenuApi from './'
 export default {
   errorCaptured(err, vm, info) {
     //拦截图标报错
@@ -103,30 +104,30 @@ export default {
     }
   },
   methods: {
-    init(page,id){
+    init(page, row){
       this.title= '新增菜单';
       this.visible = true;
-      this.id = id;
+      this.id = row?row.id : '';
       this.page = page;
       this.initParents();
       //添加下级
       if(this.page === 'child'){
         this.form.parentId = this.id;
+        this.oldParentId = row.parentId;
       }
       //编辑、查看
       if(this.page === 'edit' || this.page === 'view'){
         this.title = this.isView?'查看菜单': '修改菜单';
         this.loading = true;
-        this.$api.sysMenuGetById({
+        SysMenuApi.getById({
           data: {
             id: this.id
           },
           callback: d => {
-            this.loading = false;
             this.form = d;
             this.oldParentId = d.parentId;
           },
-          failure: e => {
+          complete: () => {
             this.loading = false;
           }
         });
@@ -136,7 +137,7 @@ export default {
       if(this.loadParent){
         return;
       }
-      this.$api.getAllMenuList({
+      SysMenuApi.getAllMenuList({
         callback: data => {
           /* 处理数据 */
           let setData = function (root){
@@ -163,14 +164,13 @@ export default {
         data: this.form,
         callback: (d, msg) => {
           this.$message.success(msg);
-          this.saveLoading = false;
           this.$emit('refresh', this.form.parentId)
           if(this.oldParentId !== null && this.oldParentId !== this.form.parentId){
             this.$emit('refresh', this.oldParentId)
           }
           this.close();
         },
-        failure: e => {
+        complete: () => {
           this.saveLoading = false;
         }
       };
@@ -178,11 +178,11 @@ export default {
         if (valid) {
           if (this.page === 'add' || this.page === 'child') {
             this.saveLoading = true;
-            this.$api.sysMenuAdd(opts);
+            SysMenuApi.add(opts);
           }
           if (this.page === 'edit') {
             this.saveLoading = true;
-            this.$api.sysMenuEdit(opts);
+            SysMenuApi.edit(opts);
           }
         } else {
           return false
@@ -194,7 +194,7 @@ export default {
       //延时销毁form表单
       setTimeout(()=>{
         this.$parent.editVisible = false;
-      },300)
+      }, g.destroyTimeout)
     }
   }
 }

@@ -25,6 +25,7 @@
 </template>
 
 <script>
+import SysUserApi from './'
 export default {
   data() {
     return {
@@ -44,12 +45,11 @@ export default {
       this.row = row;
       this.visible = true;
       this.loading = true;
-      this.$api.sysUserGetUserRoles({
+      SysUserApi.getUserRoles({
         data: {
           id: this.id
         },
         callback: d => {
-          this.loading = false;
           this.roles = d;
           this.roles.forEach(item => {
             if(item.has === '1'){
@@ -57,7 +57,7 @@ export default {
             }
           });
         },
-        failure: e => {
+        complete: () => {
           this.loading = false;
         }
       });
@@ -71,17 +71,16 @@ export default {
         checkedKeys = checkedKeys.substring(1);
       }
       this.saveLoading = true;
-      this.$api.sysUserSaveUserRole({
+      SysUserApi.saveUserRole({
         data: {
           id: this.id,
           roleIds: checkedKeys
         },
         callback: (d, msg) => {
           this.$message.success(msg);
-          this.saveLoading = false;
           this.close();
         },
-        failure: e => {
+        complete: () => {
           this.saveLoading = false;
         }
       });

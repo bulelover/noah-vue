@@ -68,6 +68,7 @@
 </template>
 
 <script>
+import SysLogApi from './'
 export default {
   props:{
     isMy:{
@@ -113,15 +114,14 @@ export default {
           ...this.searchForm
         },
         callback: data => {
-          this.tableLoading = false;
           this.tableData = data.records;
           this.total = data.total
         },
-        failure: err => {
+        complete: () => {
           this.tableLoading = false;
         }
       };
-      this.$api.sysRequestLogPage(opts);
+      SysLogApi.requestPage(opts);
     },
     view(row) {
       console.log('')

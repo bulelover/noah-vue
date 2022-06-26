@@ -92,6 +92,7 @@
 </template>
 
 <script>
+import SysUserApi from './'
 import store from '@/utils/store'
 import { VueCropper }  from 'vue-cropper'
 export default {
@@ -160,16 +161,15 @@ export default {
   methods: {
     init(){
       this.loading = true;
-      this.$api.sysUserGetById({
+      SysUserApi.getById({
         data: {
           id: this.state.user.id
         },
         callback: d => {
-          this.loading = false;
           this.form = d;
           this.imageUrl = this.$api.preview(d.headImgPath)
         },
-        failure: e => {
+        complete: () => {
           this.loading = false;
         }
       });
@@ -179,16 +179,15 @@ export default {
         data: this.form,
         callback: (d, msg) => {
           this.$message.success(msg);
-          this.saveLoading = false;
         },
-        failure: e => {
+        complete: () => {
           this.saveLoading = false;
         }
       };
       this.$refs.form.validate((valid) => {
         if (valid) {
           this.saveLoading = true;
-          this.$api.savePersonalInfo(opts);
+          SysUserApi.savePersonalInfo(opts);
         } else {
           return false
         }
@@ -226,7 +225,7 @@ export default {
           //   // this.pre = Math.floor(e.loaded / e.total * 100);// e.loaded 已经上传的字节数据，e.total 字节数据  转换为1-100的比例值 赋值个pre
           // },
           callback: (res, msg) => {
-            this.$api.saveHeadImg({
+            SysUserApi.saveHeadImg({
               data: {
                 id: this.state.user.id,
                 imgId: res.id
@@ -236,9 +235,8 @@ export default {
                 this.imageUrl = this.$api.preview(res.id)
                 this.$message.success(msg);
                 this.visible = false;
-                this.saveImgLoading = false;
               },
-              failure: e => {
+              complete: () => {
                 this.saveImgLoading = false;
               }
             });

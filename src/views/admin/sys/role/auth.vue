@@ -30,6 +30,7 @@
 </template>
 
 <script>
+import SysRoleApi from './'
 export default {
   data() {
     return {
@@ -47,12 +48,11 @@ export default {
       this.id = id;
       this.visible = true;
       this.loading = true;
-      this.$api.sysRoleGetMenusByRoleId({
+      SysRoleApi.getMenusByRoleId({
         data: {
           id: this.id
         },
         callback: d => {
-          this.loading = false;
           this.menus = d.menus;
           let parent = {};
           let setData = function (root, pId){
@@ -85,7 +85,7 @@ export default {
             })
           }
         },
-        failure: e => {
+        complete: () => {
           this.loading = false;
         }
       });
@@ -100,17 +100,16 @@ export default {
         checkedKeys = checkedKeys.substring(1);
       }
       this.saveLoading = true;
-      this.$api.sysRoleSaveRoleMenu({
+      SysRoleApi.saveRoleMenu({
         data: {
           id: this.id,
           menuIds: checkedKeys
         },
         callback: (d, msg) => {
           this.$message.success(msg);
-          this.saveLoading = false;
           this.close();
         },
-        failure: e => {
+        complete: () => {
           this.saveLoading = false;
         }
       });

@@ -32,7 +32,7 @@ function install(Vue, options = {}) {
     },
     name: function (dictCode, itemCode){
       if(dictionary && dictionary.length > 0 && dictionary[dictCode]){
-        let s = dictionary[dictCode].filter(item => item.code === itemCode);
+        let s = dictionary[dictCode].filter(item => item.code == itemCode);
         return s && s.length === 1?s[0].name: '--';
       }
       let str = localStorage.getItem(g.dictionary);
@@ -41,7 +41,7 @@ function install(Vue, options = {}) {
         if(!dictionary[dictCode]){
           return '--';
         }
-        let s = dictionary[dictCode].filter(item => item.code === itemCode);
+        let s = dictionary[dictCode].filter(item => item.code == itemCode);
         return s && s.length === 1?s[0].name: '--';
       }
     }

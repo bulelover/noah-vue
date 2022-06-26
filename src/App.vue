@@ -6,14 +6,7 @@
 export default {
   name: 'App',
   created() {
-    this.$api.getAllDictList({
-      callback:(res) => {
-        localStorage.setItem(g.dictionary, JSON.stringify(res));
-      },
-      failure: (error) => {
-        return false;
-      }
-    });
+
   },
   mounted() {
     function checkIE() {

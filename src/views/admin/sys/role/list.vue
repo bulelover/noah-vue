@@ -63,6 +63,7 @@
 </template>
 
 <script>
+import SysRoleApi from './'
 import edit from "@/views/admin/sys/role/edit";
 import auth from "@/views/admin/sys/role/auth";
 export default {
@@ -109,16 +110,15 @@ export default {
     },
     fetchData() {
       this.tableLoading = true;
-      this.$api.sysRolePage({
+      SysRoleApi.page({
         data: {
           ...this.searchForm
         },
         callback: data => {
-          this.tableLoading = false;
           this.tableData = data.records;
           this.total = data.total
         },
-        failure: err => {
+        complete: () => {
           this.tableLoading = false;
         }
       });
@@ -143,7 +143,7 @@ export default {
     },
     remove(row) {
       this.$confirm2('确定要删除吗?').then(() => {
-        this.$api.sysRoleRemoveById({
+        SysRoleApi.removeById({
           data: {
             id: row.id
           },

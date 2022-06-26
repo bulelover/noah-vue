@@ -60,7 +60,7 @@
 <script>
 import edit from "@/views/admin/sys/dict/edit";
 import editItem from "@/views/admin/sys/dict/editItem";
-
+import SysDictApi from './'
 export default {
   components: {
     edit, editItem
@@ -113,11 +113,9 @@ export default {
     load() {
       this.tableLoading = true;
       this.itemTableLoading = true;
-      this.$api.sysDictPage({
+      SysDictApi.page({
         data: this.searchForm,
         callback: data => {
-          this.itemTableLoading = false;
-          this.tableLoading = false;
           this.total = data.total;
           if (this.total === 0) {
             this.itemTableData = [];
@@ -127,7 +125,7 @@ export default {
           this.tableData = data.records;
           this.clickDict(data.records[0]);
         },
-        failure: err => {
+        complete: () => {
           this.itemTableLoading = false;
           this.tableLoading = false;
         }
@@ -136,7 +134,7 @@ export default {
     fetchItemData() {
       this.itemTableData = [];
       this.itemTableLoading = true;
-      this.$api.sysDictItemPage({
+      SysDictApi.pageItem({
         data: {
           orders: [{
             column: 'orderBy'
@@ -145,12 +143,11 @@ export default {
           ...this.itemSearchForm
         },
         callback: data => {
-          this.itemTableLoading = false;
           this.itemTableData = data.records;
           // this.itemTotal = data.total;
           this.selectedDict.nextOrderBy = this.itemTableData[data.total - 1].orderBy + 10;
         },
-        failure: err => {
+        complete: () => {
           this.itemTableLoading = false;
         }
       });
@@ -175,7 +172,7 @@ export default {
     },
     remove(row) {
       this.$confirm2('确定要删除吗?').then(() => {
-        this.$api.sysDictRemoveById({
+        SysDictApi.removeById({
           data: {
             id: row.id
           },
@@ -205,7 +202,7 @@ export default {
     },
     removeItem(row) {
       this.$confirm2('确定要删除吗?').then(() => {
-        this.$api.sysDictRemoveByItemId({
+        SysDictApi.removeByItemId({
           data: {
             id: row.id
           },

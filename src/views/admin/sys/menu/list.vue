@@ -28,7 +28,7 @@
           </template>
         </el-table-column>
         <el-table-column prop="code" label="菜单编码" min-width="220" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="name" label="图标" min-width="60" align="center">
+        <el-table-column prop="icon" label="图标" min-width="60" align="center">
           <template v-slot="{row}">
             <i v-if="row.icon.indexOf('el-icon') === 0" :class="row.icon"></i>
             <i v-else-if="row.icon.indexOf('icon-')=== 0" :class="'iconfont '+row.icon"></i>
@@ -55,7 +55,8 @@
           </template>
         </el-table-column>
         <el-table-column prop="orderBy" label="排序" min-width="80" align="right"></el-table-column>
-        <el-table-column label="操作" min-width="200" class-name="link-menu" fixed="right">
+        <el-table-column label="操作" min-width="200" class-name="link-menu" fixed="right"
+          v-if="$hasAuth('sys-menu-edit') || $hasAuth('sys-menu-add') || $hasAuth('sys-menu-delete')">
           <template v-slot="{row}">
             <el-link v-if="$hasAuth('sys-menu-edit')" @click="edit(row)" type="primary" :underline="false">修改</el-link>
             <el-link v-if="$hasAuth('sys-menu-add')" @click="addChild(row)" type="primary" :underline="false">添加下级</el-link>
@@ -70,7 +71,7 @@
 
 <script>
 import edit from "@/views/admin/sys/menu/edit";
-
+import SysMenuApi from './'
 export default {
   components: {
     edit
@@ -128,35 +129,33 @@ export default {
       //重置树变量存储
       this.treeMaps = new Map();
       if (g.isEmpty(this.searchForm.search)) {
-        this.$api.sysMenuChildren({
+        SysMenuApi.children({
           data: {
             pid: ''
           },
           callback: data => {
-            this.tableLoading = false;
             this.tableData = data;
           },
-          failure: err => {
+          complete: () => {
             this.tableLoading = false;
           }
         });
       } else {
-        this.$api.sysMenuPage({
+        SysMenuApi.page({
           data: {
             ...this.searchForm
           },
           callback: data => {
-            this.tableLoading = false;
             this.tableData = data.records;
           },
-          failure: err => {
+          complete: () => {
             this.tableLoading = false;
           }
         });
       }
     },
     load(tree, treeNode, resolve) {
-      this.$api.sysMenuChildren({
+      SysMenuApi.children({
         data: {
           pid: tree.id
         },
@@ -167,6 +166,10 @@ export default {
       });
     },
     refreshLoadTree(pId) {
+      if(pId === ''){
+        this.fetchData();
+        return;
+      }
       if(!this.treeMaps.get(pId)){
         return;
       }
@@ -185,14 +188,13 @@ export default {
     edit(row) {
       this.editVisible = true;
       this.$nextTick(()=>{
-        this.$refs.edit.init('edit', row.id);
+        this.$refs.edit.init('edit', row);
       })
     },
     view(row) {
-      console.log(this.tableData)
       this.editVisible = true;
       this.$nextTick(()=>{
-        this.$refs.edit.init('view', row.id);
+        this.$refs.edit.init('view', row);
       })
     },
     add() {
@@ -204,12 +206,12 @@ export default {
     addChild(row) {
       this.editVisible = true;
       this.$nextTick(()=>{
-        this.$refs.edit.init('child', row.id);
+        this.$refs.edit.init('child', row);
       })
     },
     remove(row) {
       this.$confirm2('确定要删除此菜单吗,请谨慎操作').then(() => {
-        this.$api.sysMenuRemoveById({
+        SysMenuApi.removeById({
           data: {
             id: row.id
           },
@@ -224,7 +226,7 @@ export default {
     changeState(val, row) {
       this.$confirm2('确定要' + (val === '1' ? '启用' : '禁用') + '此菜单吗？').then(() => {
         if (val === '1') {
-          this.$api.sysMenuEnable({
+          SysMenuApi.enable({
             data: {
               id: row.id
             },
@@ -236,7 +238,7 @@ export default {
             }
           })
         } else {
-          this.$api.sysMenuDisable({
+          SysMenuApi.disable({
             data: {
               id: row.id
             },

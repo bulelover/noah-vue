@@ -32,6 +32,7 @@
 </template>
 
 <script>
+import SysRoleApi from './'
 export default {
   data() {
     return {
@@ -67,15 +68,14 @@ export default {
       if(this.page === 'edit' || this.page === 'view'){
         this.title = this.isView?'查看角色': '修改角色';
         this.loading = true;
-        this.$api.sysRoleGetById({
+        SysRoleApi.getById({
           data: {
             id: this.id
           },
           callback: d => {
-            this.loading = false;
             this.form = d;
           },
-          failure: e => {
+          complete: () => {
             this.loading = false;
           }
         });
@@ -86,11 +86,10 @@ export default {
         data: this.form,
         callback: (d, msg) => {
           this.$message.success(msg);
-          this.saveLoading = false;
           this.refreshTable();
           this.close();
         },
-        failure: e => {
+        complete: () => {
           this.saveLoading = false;
         }
       };
@@ -98,11 +97,11 @@ export default {
         if (valid) {
           if (this.page === 'add') {
             this.saveLoading = true;
-            this.$api.sysRoleAdd(opts);
+            SysRoleApi.add(opts);
           }
           if (this.page === 'edit') {
             this.saveLoading = true;
-            this.$api.sysRoleEdit(opts);
+            SysRoleApi.edit(opts);
           }
         } else {
           return false

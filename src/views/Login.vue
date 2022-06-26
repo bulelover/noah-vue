@@ -72,7 +72,7 @@ export default {
   created() {
     store.setInitMenu(false);
     store.setMenus(null);
-    this.$api.sysUserInfo({
+    this.$api.getLoginUserInfo({
       callback: data => {
         //已经登录，直接调整到首页
         this.$router.push({name: g.home.code});

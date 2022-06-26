@@ -93,16 +93,15 @@
 </template>
 
 <script>
+import SysUserApi from './'
 import edit from './edit'
 import AssignRoles from './AssignRoles'
-
 export default {
   components: {
     edit, AssignRoles
   },
   data() {
     return {
-      searchData: {},
       searchForm: {
         loginName: '',
         realName: '',
@@ -176,23 +175,18 @@ export default {
       this.selectRow = null;
       this.tableLoading = true;
       this.tableData = [];
-      this.$api.sysUserPage({
+      SysUserApi.page({
         data: {
           ...this.searchForm
         },
         callback: data => {
-          this.searchData = g.copyVal(this.searchForm);
-          this.tableLoading = false;
           this.tableData = data.records;
           this.total = data.total
         },
-        failure: err => {
+        complete: () => {
           this.tableLoading = false;
         }
       });
-    },
-    handleCommand(command, row) {
-      this[command](row);
     },
     add() {
       this.editVisible = true;
@@ -220,7 +214,7 @@ export default {
     },
     del(row) {
       this.$confirm2('确定要删除该用户吗？').then(() => {
-        this.$api.sysUserRemoveById({
+        SysUserApi.removeById({
           data: {
             id: row.id
           },
@@ -235,7 +229,7 @@ export default {
       this.$confirm2('确定要' + (row.state === '0' ? '启用' : '停用') + '该用户吗？').then(() => {
         this.$set(row, 'loading', true);
         if (row.state === '0') {
-          this.$api.sysUserEnable({
+          SysUserApi.enable({
             data: {
               id: row.id
             },
@@ -248,7 +242,7 @@ export default {
             }
           })
         } else {
-          this.$api.sysUserDisable({
+          SysUserApi.disable({
             data: {
               id: row.id
             },

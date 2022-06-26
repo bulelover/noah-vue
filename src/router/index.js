@@ -95,27 +95,23 @@ router.beforeEach((to, from, next) => {
     next({name: 'login'})
     return;
   }
-  $api.getUserPermissions({
+  $api.getLoginData({
     callback:(res) => {
-      localStorage.setItem(g.permissions, JSON.stringify(res));
+      //权限
+      localStorage.setItem(g.permissions, JSON.stringify(res.permissions));
+      //字典
+      localStorage.setItem(g.dictionary, JSON.stringify(res.dictList));
       //获取所有菜单信息
-      $api.getUserMenuList({
-        callback: data => {
-          let menus = formatMenus(data);
-          store.setMenus(menus);
-          store.setInitMenu(true);
-          next({...to, replace: true})
-        },
-        failure: () => {
-          next()
-        }
-      });
+      let menus = formatMenus(res.menuList);
+      store.setMenus(menus);
+      store.setInitMenu(true);
+      next({...to, replace: true})
     },
     failure: (error) => {
       next()
     }
   });
-  $api.sysUserInfo({
+  $api.getLoginUserInfo({
     callback: data => {
       //设置全局登录信息
       store.setUser(data);
