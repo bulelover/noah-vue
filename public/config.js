@@ -14,6 +14,6 @@ var dynBaseUrl = function (rootPath) {
       .replace('^', '://');
 };
 
-window.g.appTitle = 'Noah 后台管理系统'
+window.G.appTitle = 'Noah 后台管理系统'
 // 后台地址 只针对打包生效
-window.g.serverUrl = dynBaseUrl('/api')
+window.G.serverUrl = dynBaseUrl('/api')

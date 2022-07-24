@@ -3,7 +3,7 @@
 		<div class="white-box full-height">
 			<span class="page-title mb16">区划列表</span>
 			<el-table ref="table" border :data="tableData" v-loading="tableLoading" lazy row-key="id"
-                :load="load" :height="g.tableHeightOnlyList">
+                :load="load" :height="G.tableHeightOnlyList">
 				<el-table-column label="序号" width="50" type="index" align="center" show-overflow-tooltip
 				                 :index="(searchForm.current-1)*searchForm.size+1"></el-table-column>
 				<el-table-column prop="name" label="区域名称" min-width="280">

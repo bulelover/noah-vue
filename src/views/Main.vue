@@ -51,15 +51,15 @@
         </div>
         <div class="app-recent-tab" ref="scrollObj">
           <template v-for="(t,i) in tabs">
-            <el-tag :key="i" v-if="i===0" size="—" @click="openMenu(t)" :class="{'menu-tag ':true, 'tag-selected': currentMeta.code === t.code}"
+            <el-tag :key="i" v-if="i===0" size="—" @click="openMenu(t)" :class="{'menu-tag ':true, 'tag-selected': currentRoutePath === t.url}"
                     type="info" effect="plain"
             ><i class="el-icon el-icon-s-home"></i> 首页</el-tag>
-            <el-tag :key="i" v-else size="—"  closable @click="openMenu(t)" :class="{'menu-tag ':true, 'tag-selected': currentMeta.code === t.code}"
+            <el-tag :key="i" v-else size="—"  closable @click="openMenu(t)" :class="{'menu-tag ':true, 'tag-selected': currentRoutePath === t.url}"
                     type="info" effect="plain"
                     :disable-transitions="false" @close="tabClose(t)">
               <i v-if="t.icon && t.icon.indexOf('el-icon') === 0" :class="'el-icon ' + t.icon"></i>
-              <i v-else-if="t.icon.indexOf('icon-') === 0" :class="'iconfont ' + t.icon"></i>
-              <icon v-else :type="t.icon"></icon> {{t.name}}
+              <i v-else-if="t.icon && t.icon.indexOf('icon-') === 0" :class="'iconfont ' + t.icon"></i>
+              <icon v-else :type="t.icon || 'doc-detail'"></icon> {{t.name}}
             </el-tag>
           </template>
         </div>
@@ -72,7 +72,10 @@
           <span style="font-weight: bold">当前位置：</span>
           <el-breadcrumb style="font-size:14px;display: inline-block;">
             <template v-for="(item,index) in currentMeta.parents">
-              <el-breadcrumb-item v-if="(item.type+'') === '1'">{{ item.name }}</el-breadcrumb-item>
+              <el-breadcrumb-item v-if="(item.type+'') === '1'">
+                <span @click="changeTabs(item)" v-if="item.url" class="cur-pos-p">{{ item.name }}</span>
+                <span v-else>{{ item.name }}</span>
+              </el-breadcrumb-item>
             </template>
             <el-breadcrumb-item>{{ currentMeta.name }}</el-breadcrumb-item>
           </el-breadcrumb>
@@ -81,11 +84,10 @@
         </div>
         <transition name="slide-fade">
             <div v-show="show" :style="{position: 'absolute',top:position?'30px':0,right: 0,left: 0,bottom: 0}">
-              <keep-alive v-if="debug">
-                <router-view ref="alive" v-if="view"></router-view>
-              </keep-alive>
-              <keep-alive v-else>
-                <router-view ref="alive" v-if="view" :key="currentMeta.code + (pageKey[currentMeta.code]?pageKey[currentMeta.code]:0)"></router-view>
+              <keep-alive>
+                <template v-if="view">
+                  <router-view ref="alive" :key="$route.fullPath"></router-view>
+                </template>
               </keep-alive>
             </div>
         </transition>
@@ -106,15 +108,14 @@ export default {
   data() {
     return {
       isCollapse: false,
-      tabs: [g.home],
+      tabs: [G.home],
       menus: [],
       menuLoading: false,
       show: true,
       timeOutMl: null,
-      appTitle: window.g.appTitle,
+      appTitle: window.G.appTitle,
       haScroll: false,
       view: true,
-      pageKey: {},
       steep: false,
       white: false,
       multiTab: false,
@@ -124,31 +125,75 @@ export default {
   },
   
   created() {
-    //绑定Vue全局事件
-    Vue.prototype.$navtab = (path) => {
-      this.changeTabs(g.router[path]);
+    /**
+     * 打开标签页
+     * {
+     *   path: '',
+     *   query: {},
+     *   cover: true //每次打开重新加载标签页。
+     * }
+     */
+    G._navtab = (obj) => {
+      if(typeof obj === 'string'){
+        return this.changeTabs(G.getRouter(obj));
+      }
+      if(obj && obj.path){
+        obj.cover = obj.cover !== false;
+        if(obj.query){
+          let params = '', sp = obj.path.indexOf('?')>-1?'&':'?';
+          for(const key in obj.query){
+            if (Object.hasOwnProperty.call(obj.query, key)) {
+              const element = obj.query[key];
+              params += sp + key + '=' + encodeURIComponent(obj.query[key]);
+              sp = '&';
+            }
+          }
+          obj.url = obj.path + params;
+        }
+        if(obj.cover){
+          if(!obj.pageId) {
+            obj.pageId = obj.path;
+          }
+          //清除原来的缓存
+          G.clearAliveCache(G.getRouterVm(obj.path));
+          G.clearAliveCache(G.getRouterVm(obj.url));
+        }
+        if(!obj.closeToParent){
+          obj.closeToParent = true;
+        }
+        this.$nextTick(()=>{
+          this.changeTabs(G.getRouter(obj.path), obj);
+        })
+      }
+    }
+    G._freshParent = ()=>{
+      /*let url = this.currentMeta.parentPath;
+      if(url && G.router[this.formatUrl(url)]._vm && G.router[this.formatUrl(url)]._vm.freshListener){
+        G.router[this.formatUrl(url)]._vm.freshListener();
+      }*/
     }
     this.show = false;
-    this.pageKey[g.home.code] = 0;
     this.menus = this.state.menus;
   },
   
   mounted() {
-    this.steep = g.steep === '1';
-    this.white = g.white === '1';
-    this.multiTab = g.multiTab === '1';
-    this.position = g.position === '1';
-    if(this.currentMeta.code !== g.home.code){
-      let curTab = {
-        url: this.$route.fullPath,
-        code: this.currentMeta.code,
-        parentPath: this.currentMeta.parentPath,
-        name: this.currentMeta.name,
-        icon: this.currentMeta.icon
-      };
+    this.steep = G.steep === '1';
+    this.white = G.white === '1';
+    this.multiTab = G.multiTab === '1';
+    this.position = G.position === '1';
+    let curTab = {
+      url: this.$route.fullPath,
+      code: this.currentMeta.code,
+      parentPath: this.currentMeta.parentPath,
+      name: this.currentMeta.name,
+      icon: this.currentMeta.icon
+    };
+    if(this.currentMeta.code !== G.home.code){
       this.tabs.push(curTab);
-      this.pageKey[curTab.code] = 0;
     }
+    G.setRouter(curTab.url, curTab)
+    //设置当前的页面的组件
+    G.setRouterVm(curTab.url, this.$refs.alive);
     setTimeout(()=>{
       this.show = true;
     }, 100);
@@ -166,10 +211,27 @@ export default {
         return this.$route.meta
       }
     },
+    currentRoutePath: {
+      get() {
+        return this.$route.fullPath
+      }
+    },
     debug: {
       get(){
         return process.env.NODE_ENV !== 'production'
       }
+    },
+    keepalive: {
+      get(){
+        return this.tabs.filter(item => { return item.code === this.currentMeta.code} ).length > 0
+      }
+    }
+  },
+
+  errorCaptured(err, vm, info) {
+    //拦截图标报错
+    if (vm.type) {
+      return false;
     }
   },
   
@@ -179,7 +241,7 @@ export default {
     },
     handleCommand(command) {
       if(command === 'personal'){
-        this.$navtab('/admin/sys/user/personal');
+        this._navtab('/admin/sys/user/personal');
         return;
       }
       if(command === 'skin'){
@@ -202,13 +264,13 @@ export default {
           }
         }
         document.body.classList.add(command);
-        g.setFrame(command);
+        G.setFrame(command);
       }
     },
     
     openMenu(tab){
-      let cur = tab.code === this.currentMeta.code;
-      if(cur){
+      let cur = tab.url === this.currentRoutePath;
+        if(cur){
         return;
       }
       this.show = false;
@@ -219,16 +281,35 @@ export default {
       }, 100);
       
     },
-    changeTabs(item){
-      let cur = item.code === this.currentMeta.code;
+    changeTabs(item, obj){
+      let cur = item.url === this.currentRoutePath;
       if(cur){
         return;
       }
       this.show = false;
+      let nt = false;
+      if(obj){
+        if(obj.query){
+          item.name = obj.query.title;
+          let rp = G.copyAsMenu(item);
+          rp.url = obj.url;
+          rp.pageId = obj.pageId;
+          rp.closeToParent = obj.closeToParent;
+          G.setRouter(obj.url, rp);
+          nt = true;
+        }
+      }
+      if(obj && obj.cover){
+        let closeTab = this.getTabByPageId(obj.pageId);
+        if(closeTab){
+          this.tabClose(closeTab);
+        }
+      }
+
       setTimeout(()=>{
-        let index = this.indexOf(this.tabs,item);
-        if(index > -1){
-          this.$router.push(item.url, ()=>{
+        let tab = this.getTabByUrl(nt?obj.url:item.url);
+        if(tab){
+          this.$router.push(nt?obj.url:item.url, ()=>{
             this.show = true;
           });
           return;
@@ -236,10 +317,10 @@ export default {
         if(this.tabs.length >= 20){
           this.tabs.splice(0,1);
         }
-        this.tabs.push(item);
-        this.pageKey[item.code] = 0;
-        this.$router.push(item.url, ()=>{
+        this.tabs.push((obj && G.getRouter(obj.url))?G.getRouter(obj.url):item);
+        this.$router.push(nt?obj.url:item.url, ()=>{
           this.$nextTick(()=>{
+            G.setRouterVm(nt?obj.url:item.url, this.$refs.alive);
             this.setHaScroll();
           })
           this.show = true;
@@ -247,63 +328,52 @@ export default {
       },100)
       
     },
-    clearAliveCache(key){
-      //关闭清除keep-alive缓存
-      if(!this.$refs.alive){
-        return;
-      }
-      let cache = this.$refs.alive.$vnode.parent.componentInstance.cache;
-      let keys = this.$refs.alive.$vnode.parent.componentInstance.keys;
-      if(cache[key] != null){
-        delete cache[key];
-        let index = keys.indexOf(key);
-        if(index > -1){
-          keys.splice(index, 1);
-        }
-      }
-    },
     tabClose(t){
       let i = this.tabs.indexOf(t);
-      let cur = t.code === this.currentMeta.code;
-      this.tabs.splice(i, 1);
+      let cur = t.url === this.currentRoutePath;
       if(cur || this.currentMeta.code === 'error-page'){
-        this.openMenu(this.tabs[i-1]);
-      }
-      this.clearAliveCache(t.code+this.pageKey[t.code]);
-    },
-    reLoadPage(){
-      if(this.debug){
-        location.reload();
-      }
-      let currentIndex = -1;
-      let tab;
-      this.tabs.forEach((t,index) => {
-        if(t.code === this.currentMeta.code){
-          currentIndex = index;
-          tab = t;
+        let isOpened = false;
+        //跳转父级
+        let pTab = this.getTabByUrl(t.url);
+        if(pTab && pTab.closeToParent){
+          this.openMenu(this.getTabByUrl(this.currentMeta.parentPath))
+          isOpened = true;
         }
+        //跳转前面一个
+        if(!isOpened){
+          this.openMenu(this.tabs[i-1]);
+        }
+      }
+      this.tabs.splice(i, 1);
+      this.$nextTick(()=>{
+        //关闭后清除keep-alive组件缓存
+        G.clearAliveCache(G.getRouterVm(t.url))
       })
-      if(currentIndex > -1){
+    },
+    getTabByUrl(fullPath){
+      let tab = this.tabs.filter(v => v.url === fullPath);
+      return tab = tab.length>0? tab[0] : null;
+    },
+    getTabByPageId(pageId){
+      let tab = this.tabs.filter(v => v.pageId === pageId);
+      return tab = tab.length>0? tab[0] : null;
+    },
+    getCurrentTab(){
+      return this.getTabByUrl(this.$route.fullPath);
+    },
+    //重载页面
+    reLoadPage(){
+      let tab = this.getCurrentTab();
+      if(tab){
+        //清除页面keep-alive
         this.view = false;
+        G.clearAliveCache(G.getRouterVm(tab.url));
         this.$nextTick(()=>{
-          this.clearAliveCache(tab.code + this.pageKey[tab.code]);
-          this.pageKey[tab.code]++;
-          this.$nextTick(()=>{
-            this.changeTabs(tab);
-          })
+          //重新载入
           this.view = true;
+          this.changeTabs(G.getRouter(tab.url))
         })
       }
-    },
-    //获取tabs下标
-    indexOf(tabsRev,item){
-      let index = -1;
-      tabsRev.forEach((tab,i) => {
-        if(tab.code === item.code){
-          index = i;
-        }
-      })
-      return index;
     },
     scrollLeft(){
       this.$refs.scrollObj.scrollTo({ left: this.$refs.scrollObj.scrollLeft - 500, behavior: 'smooth' })
@@ -321,6 +391,12 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.cur-pos-p{
+  cursor: pointer;
+}
+.cur-pos-p:hover{
+  color: #409EFF;
+}
 .recent-menu{
   cursor: pointer;
   padding: 6px 8px 4px;

@@ -68,7 +68,7 @@ export default {
           let parent = {};
           let setData = function (root, pId){
             root.forEach((item) => {
-              if(!g.isEmpty(pId)){
+              if(!G.isEmpty(pId)){
                 parent[item.id] = pId;
               }
               if(item.children && item.children.length === 0){
@@ -131,7 +131,7 @@ export default {
       //延时销毁form表单
       setTimeout(()=>{
         this.$parent.authVisible = false;
-      },g.destroyTimeout)
+      },G.destroyTimeout)
     }
   }
 }

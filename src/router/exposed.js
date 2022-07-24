@@ -1,6 +1,6 @@
 let gro = function (path, meta){
   return {
-    name: g.urlToCode(path),
+    name: G.urlToCode(path),
     path: path,
     component: () => import('../views'+path),
     meta: meta || {

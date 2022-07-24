@@ -41,7 +41,7 @@
         </div>
         <div></div>
       </div>
-      <el-table border stripe :data="tableData" v-loading="tableLoading" row-key="id" :height="g.tableHeight">
+      <el-table border stripe :data="tableData" v-loading="tableLoading" row-key="id" :height="G.tableHeight">
         <el-table-column label="序号" width="50" type="index" align="center" show-overflow-tooltip
                          :index="(searchForm.current-1)*searchForm.size+1"></el-table-column>
         <el-table-column prop="uri" label="访问地址" min-width="160" show-overflow-tooltip></el-table-column>

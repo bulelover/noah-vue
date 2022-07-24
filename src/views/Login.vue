@@ -72,10 +72,18 @@ export default {
   created() {
     store.setInitMenu(false);
     store.setMenus(null);
-    this.$api.getLoginUserInfo({
+    this.$api.getTokenInfo({
       callback: data => {
-        //已经登录，直接调整到首页
-        this.$router.push({name: g.home.code});
+        if(data.isLogin){
+          localStorage.setItem('tokenKey', data.tokenName);
+          localStorage.setItem(data.tokenName, data.tokenValue);
+          G.tokenName = data.tokenName;
+          G.tokenValue = data.tokenValue;
+          //已经登录，直接调整到首页
+          this.$router.push({name: G.home.code});
+        }else{
+          this.isLogin = false;
+        }
       },
       failure: err => {
         this.isLogin = false;
@@ -96,11 +104,11 @@ export default {
           callback: data => {
             localStorage.setItem('tokenKey', data.tokenName);
             localStorage.setItem(data.tokenName, data.tokenValue);
-            g.tokenName = data.tokenName;
-            g.tokenValue = data.tokenValue;
+            G.tokenName = data.tokenName;
+            G.tokenValue = data.tokenValue;
             // this.loading = false
             // this.loginText = '登 录';
-            this.$router.push({name: g.home.code});
+            this.$router.push({name: G.home.code});
           },
           failure: () => {
             this.loading = false

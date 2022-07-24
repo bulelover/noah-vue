@@ -8,83 +8,8 @@
   <title>Vue App</title>
   <link type="text/css" href="//at.alicdn.com/t/font_2732307_taccuybju6.css" rel="stylesheet"/>
   <script>
-    window.g = {
-      // affixTop: 60,
-      // affixBottom: 0,
-      home: {
-        code:'admin-home',
-        name:'首页',
-        url:'/admin/home',
-        icon:'el-icon-s-home',
-      },
-      permissions: "noah-permissions",
-      dictionary: "noah-dictionary",
-      dialogWidth1: '700px',
-      dialogWidth2: '820px',
-      tableHeight: 'calc(100% - 137px)',
-      tableHeightNoPage: 'calc(100% - 89px)',
-      tableHeightNoPageSearch: 'calc(100% - 52px)',
-      tableHeightOnlyList: 'calc(100% - 38px)',
-      rowClass: 'base-tr',
-      loginId: null,
-      multiTab: localStorage.getItem('multiTab') || '1',
-      position: localStorage.getItem('position') || '1',
-      white: localStorage.getItem('white') || '0',
-      theme: localStorage.getItem('theme') || 'theme-dark-blue',
-      frame: localStorage.getItem('frame') || 'frame-default',
-      steep: localStorage.getItem('steep') || '',
-      tokenName: localStorage.getItem('tokenKey'),
-      tokenValue: localStorage.getItem(localStorage.getItem('tokenKey')),
-      meta: {},
-      router: {},
-      destroyTimeout: 300,
-      copyVal: function (data) {
-        return JSON.parse(JSON.stringify(data))
-      },
-      setTheme: function(theme){
-        localStorage.setItem('theme', theme);
-      },
-      setMultiTab: function(v){
-        localStorage.setItem('multiTab', v);
-      },
-      setFrame: function(v){
-        localStorage.setItem('frame', v);
-      },
-      setSteep: function(v){
-        localStorage.setItem('steep', v);
-      },
-      setWhite: function(v){
-        localStorage.setItem('white', v);
-      },
-      setPosition: function(v){
-        localStorage.setItem('position', v);
-      },
-      /**
-       * 判断对象是否为null或undefined
-       * @param val 对象
-       * @returns {boolean}
-       */
-      isNull: function (val) {
-        return val === undefined || val === null;
-      },
-      isEmpty: function (val) {
-        if (val === undefined || val === null) {
-          return true;
-        }
-        val = val.trim();
-        return val === '';
-      },
-      urlToCode: function (url) {
-        var arr = url.split('/');
-        var name = '';
-        arr.forEach(function (item){
-          if (!g.isEmpty(item)) {
-            name += item.trim().toLowerCase().replace(item[0], item[0].toUpperCase());
-          }
-        });
-        return name;
-      },
-    };
+    //初始化全局变量G
+    window.G = {}
     window.getIpCallback = function (obj) {
       var ips = document.getElementsByClassName("public-ip");
       for (var i = 0; i < ips.length; i++) {

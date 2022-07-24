@@ -22,7 +22,10 @@ export default {
   mounted() {
     //默认展开第一个菜单
     this.$nextTick(() => {
-      $('.el-submenu__title:eq(0)').trigger('click')
+      let $firstMenu = $('.el-submenu__title:eq(0)');
+      if(!$firstMenu.parent().hasClass('is-opened')){
+        $firstMenu.trigger('click')
+      }
     })
   }
 }

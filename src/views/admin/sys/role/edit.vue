@@ -1,7 +1,7 @@
 <template>
   <el-dialog :title="title"
              :append-to-body="true"
-             :width="g.dialogWidth1"
+             :width="G.dialogWidth1"
              :visible.sync="visible"
              :close-on-click-modal="false"
              :close-on-press-escape="false"
@@ -113,7 +113,7 @@ export default {
       //延时销毁form表单
       setTimeout(()=>{
         this.$parent.editVisible = false;
-      },g.destroyTimeout)
+      },G.destroyTimeout)
     },
     refreshTable(){
       this.$emit('refreshTable');

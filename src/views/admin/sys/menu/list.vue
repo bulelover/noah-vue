@@ -15,7 +15,7 @@
         <!--      <el-checkbox v-model="multiple" label="多选" style="margin-left: 10px"></el-checkbox>-->
       </div>
       <el-table ref="table" border v-if="refreshTable" :data="tableData" v-loading="tableLoading" lazy row-key="id"
-                :load="load" :height="g.tableHeightNoPage">
+                :load="load" :height="G.tableHeightNoPage">
         <el-table-column label="序号" width="50" type="index" align="center"
                          :index="(searchForm.current-1)*searchForm.size+1"></el-table-column>
         <el-table-column prop="name" label="菜单名称" min-width="220" show-overflow-tooltip>
@@ -128,7 +128,7 @@ export default {
       this.tableLoading = true;
       //重置树变量存储
       this.treeMaps = new Map();
-      if (g.isEmpty(this.searchForm.search)) {
+      if (G.isEmpty(this.searchForm.search)) {
         SysMenuApi.children({
           data: {
             pid: ''

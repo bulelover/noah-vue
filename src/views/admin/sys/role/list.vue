@@ -19,7 +19,7 @@
         </div>
         <!--      <el-checkbox v-model="multiple" label="多选" style="margin-left: 10px"></el-checkbox>-->
       </div>
-      <el-table ref="table" border :data="tableData" v-loading="tableLoading" row-key="id" :height="g.tableHeight">
+      <el-table ref="table" border :data="tableData" v-loading="tableLoading" row-key="id" :height="G.tableHeight">
         <el-table-column label="序号" width="50" type="index" align="center"
                          :index="(searchForm.current-1)*searchForm.size+1"></el-table-column>
         <el-table-column prop="name" label="角色名称" min-width="120" show-overflow-tooltip>

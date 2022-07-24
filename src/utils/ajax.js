@@ -22,7 +22,7 @@ axios.defaults.withCredentials = true
 */
 axios.defaults.headers['Content-Type'] = 'application/x-www-form-urlencoded; charset=utf-8'
 // 非生产环境 && 开启代理, 接口前缀统一使用[/api]前缀做代理拦截!
-const BASE_URL = process.env.NODE_ENV !== 'production' ? '/api' : g.serverUrl
+const BASE_URL = process.env.NODE_ENV !== 'production' ? '/api' : G.serverUrl
 // 这只基础请求路径
 axios.BASE_URL = BASE_URL
 Vue.prototype.$uploadUrl = BASE_URL+'/file/upload'
@@ -35,8 +35,8 @@ let loginChangeError = '检测到当前窗口登录信息已发生变更';
 let notLoginMsg = '未登录或登录已过期';
 axios.interceptors.request.use(config => {
   let last = localStorage.getItem(loginKey);
-  if (g.loginId != null) {
-    let current = g.loginId;
+  if (G.loginId != null) {
+    let current = G.loginId;
     if (current && current !== last) {
       MessageBox.confirm('检测到当前窗口登录信息已发生变更， 点击确定将刷新窗口，是否继续?', '提示', {
         confirmButtonText: '确定',
@@ -55,12 +55,12 @@ axios.interceptors.request.use(config => {
   }
 
   // 请求头带上token null判定 否则IE报错
-  if(g.tokenName){
-    config.headers[g.tokenName] = localStorage.getItem(g.tokenName);
+  if(G.tokenName){
+    config.headers[G.tokenName] = localStorage.getItem(G.tokenName);
   }
-  if (localStorage.getItem(g.tokenName) !== g.token) {
+  if (localStorage.getItem(G.tokenName) !== G.token) {
     //同时设置全局变量的token
-    g.token = localStorage.getItem(g.tokenName);
+    G.token = localStorage.getItem(G.tokenName);
   }
 
   // 请求地址处理
@@ -176,7 +176,7 @@ let executeAxiosByType = (type, url, config) => {
 //让get支持data传参
 axios['_get'] = (url, config) => {
   if(config.data){
-    config.params = merge({}, config.params, g.copyVal(config.data))
+    config.params = merge({}, config.params, G.copyVal(config.data))
     config.data = null;
   }
   executeAxiosByType('get', url, config);
@@ -192,7 +192,7 @@ axios['_put'] = (url, config) => {
 
 axios['_delete'] = (url, config) => {
   if(config.data){
-    config.params = merge({}, config.params, g.copyVal(config.data))
+    config.params = merge({}, config.params, G.copyVal(config.data))
     config.data = null;
   }
   executeAxiosByType('delete', url, config);

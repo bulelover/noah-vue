@@ -19,8 +19,8 @@
         </div>
         <!--      <el-checkbox v-model="multiple" label="多选" style="margin-left: 10px"></el-checkbox>-->
       </div>
-      <el-table ref="table" border :data="tableData" v-loading="tableLoading" row-key="id" :height="g.tableHeight" >
-        <!-- :row-class-name="g.rowClass"       -->
+      <el-table ref="table" border :data="tableData" v-loading="tableLoading" row-key="id" :height="G.tableHeight" >
+        <!-- :row-class-name="G.rowClass"       -->
         <!--        <el-table-column width="50" align="center">
                   <template slot="header" v-if="multiple">
                     <el-checkbox v-model="multipleCbx" :indeterminate="isIndeterminate"></el-checkbox>
@@ -39,7 +39,7 @@
         <el-table-column prop="realName" label="真实姓名" min-width="120">
           <template v-slot="{row}">
             <el-link type="primary" v-if="$perms.has('sys-user-view')"
-                  :underline="false" @click="view(row)">{{ row.realName }}</el-link>
+                  :underline="false" @click="view(row)">{{ row.realName}}</el-link>
             <template v-else>{{ row.realName }}</template>
           </template>
         </el-table-column>
@@ -152,11 +152,11 @@ export default {
     multiple() {
       this.selectRow = null;
       this.isIndeterminate = false;
-      this.$table.watchMultipleCbx(g.rowClass, false, this);
+      this.$table.watchMultipleCbx(G.rowClass, false, this);
     },
     multipleCbx(val) {
-      this.$table.watchMultipleCbx(g.rowClass, val, this);
-      // this.$table.watchMultipleCbx(g.rowClass, val, this, options);
+      this.$table.watchMultipleCbx(G.rowClass, val, this);
+      // this.$table.watchMultipleCbx(G.rowClass, val, this, options);
       // options=>{  // 用于设置不同的变量替代，已下是默认值，建议直接使用默认值
       //   multiple: 'multiple',  //多选
       //   multipleCbx: 'multipleCbx', //全选

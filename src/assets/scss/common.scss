@@ -7,6 +7,42 @@ body,html {
 * {
   box-sizing: border-box;
 }
+
+body,
+body * {
+  /* 滚动条 */
+  &::-webkit-scrollbar-track-piece {
+    background-color: #fff; /*滚动条的背景颜色*/
+    -webkit-border-radius: 0; /*滚动条的圆角宽度*/
+  }
+
+  &::-webkit-scrollbar {
+    width: 10px; /*滚动条的宽度*/
+    height: 8px; /*滚动条的高度*/
+  }
+
+  &::-webkit-scrollbar-thumb:vertical {
+    /*垂直滚动条的样式*/
+    height: 50px;
+    background-color: rgba(153, 153, 153, 0.5);
+    -webkit-border-radius: 4px;
+    outline: 2px solid #fff;
+    outline-offset: -2px;
+    border: 2px solid #fff;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    /*滚动条的hover样式*/
+    background-color: rgba(159, 159, 159, 0.3);
+    -webkit-border-radius: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    /*滚动条的hover样式*/
+    background-color: rgba(159, 159, 159, 0.5);
+    -webkit-border-radius: 4px;
+  }
+}
 body, table{
   overflow: auto;
   font-size: 14px;
@@ -22,6 +58,9 @@ body, table{
   line-height: 1;
   vertical-align: baseline;
   -webkit-font-smoothing: antialiased;
+}
+.el-button [class*=i-icon-]+span {
+  margin-left: 5px;
 }
 .el-button .iconfont+span{
   margin-left: 5px;
@@ -97,9 +136,10 @@ body, table{
   min-height: 300px;
   max-height: 90%;
   border-radius: 6px;
+  border: 2px solid #BBBBBB;
   overflow: hidden;
   .el-dialog__body {
-    height: calc(100% - 108px);
+    height: calc(100% - 106px);
     overflow: auto;
     padding: 0;
   }

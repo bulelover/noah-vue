@@ -23,12 +23,12 @@ const router = new VueRouter({
   routes: [
     {
       name: 'admin', path: '/admin', component: Main,
-      redirect: {name: g.home.code, replace: true},
+      redirect: {name: G.home.code, replace: true},
       children: [
-        {name: g.home.code, path: g.home.url, component: Home, meta: g.home},
+        {name: G.home.code, path: G.home.url, component: Home, meta: G.home},
       ],
       beforeEnter (to, from, next) {
-        if (!g.tokenValue && to.name !== 'login') {
+        if (!G.tokenValue && to.name !== 'login') {
           store.setUser(null);
           next({name: 'login'});
           return
@@ -44,38 +44,31 @@ const router = new VueRouter({
     // },
   ]
 });
-g.router['/admin/home'] = g.home;
+//首页加入全局路由变量
+G.setRouter('/admin/home', G.home);
 
 let formatMenus = function (data) {
   /* 处理数据 */
   let setData = function (root, parents){
     root.forEach((item) => {
-      if (!g.isEmpty(item.url)) {
-        let name = g.urlToCode(item.url);
-        g.meta[name] = item;
-        if(!g.router[item.url]){
-          g.router[item.url] = {
-            code: item.code,
-            name: item.name,
-            url: item.url,
-            icon: item.icon
-          };
+      if (!G.isEmpty(item.url)) {
+        let name = G.urlToCode(item.url);
+        G.meta[name] = item;
+        if(!G.getRouter(item.url)){
+          G.setRouter(item.url, G.copyAsMenu(item));
           router.addRoute('admin',{
             name: name, path: item.url, component: () => import('../views'+item.url), meta: {code:item.code, name: item.name}
           });
         }
       }
       let nextParents;
-      let obj = {
-        type: item.type,
-        name: item.name
-      };
+      let obj = G.copyAsMenu(item);
       if (parents == null) {
         item['parents'] = [];
         nextParents = [obj];
       } else {
-        item['parents'] = g.copyVal(parents);
-        nextParents = g.copyVal(parents || []).concat([obj]);
+        item['parents'] = G.copyVal(parents);
+        nextParents = G.copyVal(parents || []).concat([obj]);
       }
       if(item.children && item.children.length > 0){
         setData(item.children, nextParents);
@@ -92,7 +85,8 @@ router.beforeEach((to, from, next) => {
     next()
     return;
   }
-  if (!g.tokenValue) {
+  console.log(localStorage.getItem('tokenKey'), localStorage.getItem(localStorage.getItem('tokenKey')))
+  if (!G.tokenValue) {
     next({name: 'login'})
     return;
   }
@@ -104,9 +98,9 @@ router.beforeEach((to, from, next) => {
   $api.getLoginData({
     callback:(res) => {
       //权限
-      localStorage.setItem(g.permissions, JSON.stringify(res.permissions));
+      localStorage.setItem(G.permissions, JSON.stringify(res.permissions));
       //字典
-      localStorage.setItem(g.dictionary, JSON.stringify(res.dictList));
+      localStorage.setItem(G.dictionary, JSON.stringify(res.dictList));
       //获取所有菜单信息
       let menus = formatMenus(res.menuList);
       store.setMenus(menus);
@@ -130,15 +124,16 @@ router.beforeEach((to, from, next) => {
 
 //设置相关参数
 router.afterEach((to, from) => {
+  to.meta.parentPath = from.fullPath;
   if(to.query && to.query.child){
-    to.meta.parentPath = from.fullPath;
+    to.meta.child = true;
   }
-  if(g.meta[to.name]){
-    to.meta.code = g.meta[to.name].code;
-    to.meta.name = g.meta[to.name].name;
-    to.meta.type = g.meta[to.name].type;
-    to.meta.icon = g.meta[to.name].icon;
-    to.meta.parents = g.meta[to.name].parents;
+  if(G.meta[to.name]){
+    to.meta.code = G.meta[to.name].code;
+    to.meta.name = G.meta[to.name].name;
+    to.meta.type = G.meta[to.name].type;
+    to.meta.icon = G.meta[to.name].icon;
+    to.meta.parents = G.meta[to.name].parents;
   }
   if(to.query.title){
     to.meta.name = to.query.title;

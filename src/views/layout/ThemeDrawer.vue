@@ -54,11 +54,11 @@ export default {
       this.checked = this.multiTab;
     },
     setMultiTab(v){
-      g.setMultiTab(v?'1':'0');
+      G.setMultiTab(v?'1':'0');
       this.$emit('update', 'multiTab', v);
     },
     setWhite(v){
-      g.setWhite(v?'1':'0');
+      G.setWhite(v?'1':'0');
       if(v){
         document.body.classList.add('white-theme');
       }else {
@@ -70,11 +70,11 @@ export default {
       }
     },
     setPosition(v){
-      g.setPosition(v?'1':'0');
+      G.setPosition(v?'1':'0');
       this.$emit('update', 'position', v);
     },
     setSteep(v){
-      g.setSteep(v?'1':'0');
+      G.setSteep(v?'1':'0');
       this.$emit('update', 'steep', v);
     },
     
@@ -86,7 +86,7 @@ export default {
       }
       //设置主题色
       document.body.classList.add(command);
-      g.setTheme(command);
+      G.setTheme(command);
     }
   }
 }

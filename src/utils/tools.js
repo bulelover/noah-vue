@@ -1,5 +1,4 @@
 import $ from 'jquery'
-import Vue from "vue";
 function getPublicIp(ip){
   $('body').append('<script src="http://whois.pconline.com.cn/ipJson.jsp?ip='+ip+'&callback=getIpCallback"></script>');
 }
@@ -39,7 +38,7 @@ function install(Vue, options = {}) {
         return;
       }
       if(_this.$refs[tableRef]){
-        let elm = _this.$refs[tableRef].$el.getElementsByClassName(g.rowClass);
+        let elm = _this.$refs[tableRef].$el.getElementsByClassName(G.rowClass);
         for(let i=0; i< elm.length; i++){
           if(val){
             elm[i].classList.add('row-selected');
@@ -48,7 +47,7 @@ function install(Vue, options = {}) {
           }
         }
         if(val){
-          _this[selectRow] = g.copyVal(_this[tableData]);
+          _this[selectRow] = G.copyVal(_this[tableData]);
         }else {
           _this[selectRow] = null;
         }
@@ -123,24 +122,6 @@ function install(Vue, options = {}) {
     }
   }
 
-  const toolFunctions = {
-    /**
-     * file图片文件转base64
-     * @param {*} img file文件或者blob
-     * @param {*} callback function (imgurl)通过参数获得base64
-     */
-    getBase64 : function (img, callback){
-      const reader = new FileReader()
-      reader.addEventListener('load', () => callback(reader.result))
-      reader.readAsDataURL(img)
-    }
-  }
-  window.g = {
-    ...toolFunctions,
-    ...window.g
-  }
-  Vue.prototype.g = window.g;
-
   //解决大部分滚动条问题（单个页面不包含内部多标签页的形式）
   //主题定制
   Vue.mixin({
@@ -156,7 +137,7 @@ function install(Vue, options = {}) {
             if(permissions && permissions.length > 0){
               return permissions.indexOf(code) > -1;
             }
-            let str = localStorage.getItem(g.permissions);
+            let str = localStorage.getItem(G.permissions);
             if(str && str.substring(0,1) === '['){
               permissions = JSON.parse(str);
               return permissions.indexOf(code) > -1;
@@ -174,7 +155,7 @@ function install(Vue, options = {}) {
             if(dictionary && dictionary.length > 0){
               return dictionary[dictCode];
             }
-            let str = localStorage.getItem(g.dictionary);
+            let str = localStorage.getItem(G.dictionary);
             if(str && str.substring(0,1) === '{'){
               dictionary = JSON.parse(str);
               return dictionary[dictCode];
@@ -185,7 +166,7 @@ function install(Vue, options = {}) {
               let s = dictionary[dictCode].filter(item => item.code == itemCode);
               return s && s.length === 1?s[0].name: '--';
             }
-            let str = localStorage.getItem(g.dictionary);
+            let str = localStorage.getItem(G.dictionary);
             if(str && str.substring(0,1) === '{'){
               dictionary = JSON.parse(str);
               if(!dictionary[dictCode]){

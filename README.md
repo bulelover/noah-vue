@@ -3,8 +3,8 @@
 1. 安装 node.js v13
 
 2. 设置镜像
-npm config set registry http://registry.npm.taobao.org/
-npm config set sass_binary_site=https://npm.taobao.org/mirrors/node-sass
+npm config set registry=http://registry.npmmirror.com
+npm config set sass_binary_site=https://registry.npmmirror.com/node-sass
 
 3. 安装python 2.7
 https://www.python.org/downloads/
@@ -30,7 +30,7 @@ npm run build
 
 ### 升级cnpm
 ```
-npm install -g cnpm --registry=https://registry.npm.taobao.org
+npm install -g cnpm --registry=http://registry.npmmirror.com
 ```
 ### 管理员运行
 ```

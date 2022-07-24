@@ -1,7 +1,7 @@
 <template>
   <el-dialog :title="title"
              :append-to-body="true"
-             :width="g.dialogWidth1"
+             :width="G.dialogWidth1"
              :visible.sync="visible"
              :close-on-click-modal="false"
              :close-on-press-escape="false"
@@ -96,10 +96,10 @@ export default {
     },
     options:{
       get(){
-        if(g['menuOptions'] && g['menuOptions'].length>0){
+        if(G.menuOptions && G.menuOptions.length>0){
           this.loadParent = true;
         }
-        return this.loadParent? g['menuOptions'] : [];
+        return this.loadParent? G.menuOptions : [];
       }
     }
   },
@@ -151,7 +151,7 @@ export default {
             });
           }
           setData(data);
-          g['menuOptions'] = data;
+          G.menuOptions = data;
           this.loadParent = true;
         }
       });
@@ -168,6 +168,7 @@ export default {
           if(this.oldParentId !== null && this.oldParentId !== this.form.parentId){
             this.$emit('refresh', this.oldParentId)
           }
+          G.menuOptions = null;
           this.close();
         },
         complete: () => {
@@ -194,7 +195,7 @@ export default {
       //延时销毁form表单
       setTimeout(()=>{
         this.$parent.editVisible = false;
-      }, g.destroyTimeout)
+      }, G.destroyTimeout)
     }
   }
 }

@@ -37,7 +37,7 @@
         </div>
         <!--      <el-checkbox v-model="multiple" label="多选" style="margin-left: 10px"></el-checkbox>-->
       </div>
-      <el-table class="mt16" :data="itemTableData" row-key="id" :height="g.tableHeightNoPageSearch">
+      <el-table class="mt16" :data="itemTableData" row-key="id" :height="G.tableHeightNoPageSearch">
         <el-table-column label="序号" width="50" type="index" align="center" show-overflow-tooltip
                          :index="(itemSearchForm.current-1)*itemSearchForm.size+1"></el-table-column>
         <el-table-column prop="code" label="项目编码" min-width="120"></el-table-column>
