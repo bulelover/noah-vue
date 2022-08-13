@@ -6,7 +6,6 @@ let gro = function (path, meta){
     meta: meta || {
       name: '',
       parents: '',
-      parentPath: '',
     }
   }
 }

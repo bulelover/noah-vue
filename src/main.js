@@ -32,11 +32,11 @@ document.body.classList.add(G.theme);
 document.body.classList.add(G.frame);
 
 import router from '@/router'
-import ajax from "@/utils/ajax";
+import http from "@/utils/http";
 import api from "@/utils/api";
 
 //定义全局
-Vue.prototype.$ajax = ajax;
+Vue.prototype.$http = http;
 Vue.prototype.$api = api;
 Vue.prototype.$theme = {
   lmWidth: '220px',
@@ -49,11 +49,10 @@ Vue.use(tools);
 require('es6-promise').polyfill();
 require('es6-promise/auto');
 
-let vm = new Vue({
+new Vue({
   el: '#app',
   router,
   store,
   render: h => h(App)
 });
-export default vm
 

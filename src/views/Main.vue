@@ -84,9 +84,9 @@
         </div>
         <transition name="slide-fade">
             <div v-show="show" :style="{position: 'absolute',top:position?'30px':0,right: 0,left: 0,bottom: 0}">
-              <keep-alive>
+              <keep-alive exclude="exclude">
                 <template v-if="view">
-                  <router-view ref="alive" :key="$route.fullPath"></router-view>
+                  <router-view ref="alive"></router-view>
                 </template>
               </keep-alive>
             </div>
@@ -98,8 +98,6 @@
 
 <script>
 import TreeMenu from "@/views/layout/TreeMenu";
-import $ from "jquery";
-import Vue from "vue";
 import store from '@/utils/store'
 import ThemeDrawer from "@/views/layout/ThemeDrawer";
 
@@ -139,27 +137,29 @@ export default {
       }
       if(obj && obj.path){
         obj.cover = obj.cover !== false;
-        if(obj.query){
-          let params = '', sp = obj.path.indexOf('?')>-1?'&':'?';
-          for(const key in obj.query){
+        if(obj.params && obj.path.indexOf(':params') > 0){
+          /*let params = '', sp = obj.path.indexOf('?')>-1?'&':'?';
+          for(const key in obj.params){
             if (Object.hasOwnProperty.call(obj.query, key)) {
               const element = obj.query[key];
               params += sp + key + '=' + encodeURIComponent(obj.query[key]);
               sp = '&';
             }
+          }*/
+          if(!obj.params.pageId) {
+            obj.params.pageId = obj.path;
           }
-          obj.url = obj.path + params;
+
+          if(!obj.params.closeToParent){
+            obj.params.closeToParent = true;
+          }
+          let params = G.base64EncodeURI(JSON.stringify(obj.params));
+          obj.url = obj.path.substring(0, obj.path.indexOf(':params')) + params;
         }
         if(obj.cover){
-          if(!obj.pageId) {
-            obj.pageId = obj.path;
-          }
           //清除原来的缓存
           G.clearAliveCache(G.getRouterVm(obj.path));
           G.clearAliveCache(G.getRouterVm(obj.url));
-        }
-        if(!obj.closeToParent){
-          obj.closeToParent = true;
         }
         this.$nextTick(()=>{
           this.changeTabs(G.getRouter(obj.path), obj);
@@ -167,10 +167,11 @@ export default {
       }
     }
     G._freshParent = ()=>{
-      /*let url = this.currentMeta.parentPath;
-      if(url && G.router[this.formatUrl(url)]._vm && G.router[this.formatUrl(url)]._vm.freshListener){
-        G.router[this.formatUrl(url)]._vm.freshListener();
-      }*/
+      let params = G.getRouterParams(this.$route.params);
+      let url = params.parentPath;
+      if(url && G.getRouterVm(url) && G.getRouterVm(url).freshListener){
+        G.getRouterVm(url).freshListener();
+      }
     }
     this.show = false;
     this.menus = this.state.menus;
@@ -181,10 +182,11 @@ export default {
     this.white = G.white === '1';
     this.multiTab = G.multiTab === '1';
     this.position = G.position === '1';
+    let params = G.getRouterParams(this.$route.params);
     let curTab = {
+      ...params,
       url: this.$route.fullPath,
       code: this.currentMeta.code,
-      parentPath: this.currentMeta.parentPath,
       name: this.currentMeta.name,
       icon: this.currentMeta.icon
     };
@@ -289,20 +291,23 @@ export default {
       this.show = false;
       let nt = false;
       if(obj){
-        if(obj.query){
-          item.name = obj.query.title;
+        if(obj.params){
+          item.name = obj.params.title;
           let rp = G.copyAsMenu(item);
           rp.url = obj.url;
-          rp.pageId = obj.pageId;
-          rp.closeToParent = obj.closeToParent;
+          rp.pageId = obj.params.pageId;
+          rp.parentPath = obj.params.parentPath;
+          rp.closeToParent = obj.params.closeToParent;
           G.setRouter(obj.url, rp);
           nt = true;
-        }
-      }
-      if(obj && obj.cover){
-        let closeTab = this.getTabByPageId(obj.pageId);
-        if(closeTab){
-          this.tabClose(closeTab);
+
+          if(obj.cover && obj.params.pageId){
+            let closeTab = this.getTabByPageId(obj.params.pageId);
+            if(closeTab){
+              this.tabClose(closeTab);
+            }
+          }
+
         }
       }
 
@@ -336,7 +341,7 @@ export default {
         //跳转父级
         let pTab = this.getTabByUrl(t.url);
         if(pTab && pTab.closeToParent){
-          this.openMenu(this.getTabByUrl(this.currentMeta.parentPath))
+          this.openMenu(this.getTabByUrl(t.parentPath))
           isOpened = true;
         }
         //跳转前面一个

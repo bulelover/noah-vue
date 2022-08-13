@@ -15,7 +15,7 @@
           </el-form>
         </div>
         <div>
-          <el-button v-if="$perms.has('sys-role-add')" type="primary" @click="add">新增</el-button>
+          <el-button v-if="G.hasPerm('sys-role-add')" type="primary" @click="add">新增</el-button>
         </div>
         <!--      <el-checkbox v-model="multiple" label="多选" style="margin-left: 10px"></el-checkbox>-->
       </div>
@@ -24,7 +24,7 @@
                          :index="(searchForm.current-1)*searchForm.size+1"></el-table-column>
         <el-table-column prop="name" label="角色名称" min-width="120" show-overflow-tooltip>
           <template v-slot="{row}">
-            <el-link type="primary" v-if="$perms.has('sys-role-view')" :underline="false"
+            <el-link type="primary" v-if="G.hasPerm('sys-role-view')" :underline="false"
                   @click="view(row)">{{ row.name }}</el-link>
             <template v-else>{{ row.name }}</template>
           </template>
@@ -41,9 +41,9 @@
         <el-table-column prop="createTime" label="创建时间" min-width="170" show-overflow-tooltip></el-table-column>
         <el-table-column label="操作" min-width="200" class-name="link-menu" fixed="right">
           <template v-slot="{row}">
-            <el-link v-if="$perms.has('sys-role-menu')" @click="auth(row)" type="primary" :underline="false">角色授权</el-link>
-            <el-link v-if="$perms.has('sys-role-edit')" @click="edit(row)" type="primary" :underline="false">修改</el-link>
-            <el-link v-if="$perms.has('sys-role-delete') && row.id !== 'admin'" @click="remove(row)" type="danger" :underline="false">删除</el-link>
+            <el-link v-if="G.hasPerm('sys-role-menu')" @click="auth(row)" type="primary" :underline="false">角色授权</el-link>
+            <el-link v-if="G.hasPerm('sys-role-edit')" @click="edit(row)" type="primary" :underline="false">修改</el-link>
+            <el-link v-if="G.hasPerm('sys-role-delete') && row.id !== 'admin'" @click="remove(row)" type="danger" :underline="false">删除</el-link>
           </template>
         </el-table-column>
       </el-table>

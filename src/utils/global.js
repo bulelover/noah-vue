@@ -1,4 +1,11 @@
 import Vue from "vue";
+import {Base64} from "js-base64";
+import $ from "jquery";
+
+//权限校验方法
+let permissions;
+//字典缓存
+let dictionary = {};
 
 const toolFunctions = {
   /**
@@ -92,8 +99,73 @@ const toolFunctions = {
       return G.router[url]['_vm']
     }
     return null;
-  }
+  },
+  hasPerm: function (code){
+    if(permissions && permissions.length > 0){
+      return permissions.indexOf(code) > -1;
+    }
+    let str = localStorage.getItem(G.permissions);
+    if(str && str.substring(0,1) === '['){
+      permissions = JSON.parse(str);
+      return permissions.indexOf(code) > -1;
+    }
+    return false;
+  },
+  emptyPerm: function (){
+      permissions = []
+  },
 
+  getDictList: function (dictCode){
+    if(dictionary && dictionary.length > 0){
+      return dictionary[dictCode];
+    }
+    let str = localStorage.getItem(G.dictionary);
+    if(str && str.substring(0,1) === '{'){
+      dictionary = JSON.parse(str);
+      return dictionary[dictCode];
+    }
+  },
+  getDictLabel: function (dictCode, itemCode){
+    if(dictionary && dictionary.length > 0 && dictionary[dictCode]){
+      let s = dictionary[dictCode].filter(item => item.code == itemCode);
+      return s && s.length === 1?s[0].name: '--';
+    }
+    let str = localStorage.getItem(G.dictionary);
+    if(str && str.substring(0,1) === '{'){
+      dictionary = JSON.parse(str);
+      if(!dictionary[dictCode]){
+        return '--';
+      }
+      let s = dictionary[dictCode].filter(item => item.code == itemCode);
+      return s && s.length === 1?s[0].name: '--';
+    }
+  },
+  emptyDict(){
+    dictionary = {}
+  },
+
+  base64Encode(str){
+    return Base64.encode(str);
+  },
+
+  base64EncodeURI(str){
+    return Base64.encodeURI(str);
+  },
+
+  base64Decode(str){
+    return Base64.decode(str);
+  },
+
+  getRouterParams(obj){
+    if(obj.params){
+      return JSON.parse(G.base64Decode(obj.params))
+    }
+    return {};
+  },
+
+  extend(deep , target, ...object){
+    return $.extend(deep, target, ...object);
+  }
 
 }
 

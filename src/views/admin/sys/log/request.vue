@@ -124,7 +124,6 @@ export default {
       SysLogApi.requestPage(opts);
     },
     view(row) {
-      console.log('')
       // this.$refs.edit.init('view', row.id);
     }
   }

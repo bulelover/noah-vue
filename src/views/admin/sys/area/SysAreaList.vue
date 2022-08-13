@@ -8,7 +8,7 @@
 				                 :index="(searchForm.current-1)*searchForm.size+1"></el-table-column>
 				<el-table-column prop="name" label="区域名称" min-width="280">
 					<template v-slot="{row}">
-						<el-link type="primary" v-if="$perms.has('sys-area-view')"
+						<el-link type="primary" v-if="G.hasPerm('sys-area-view')"
 										 :underline="false" @click="view(row)">{{ row.name }}
 						</el-link>
 						<template v-else>{{ row.name }}</template>
@@ -19,16 +19,16 @@
 				<el-table-column prop="code" label="区域编号" min-width="100" show-overflow-tooltip></el-table-column>
 				<el-table-column prop="areaLevel" label="区域等级" min-width="80" show-overflow-tooltip>
           <template v-slot="{row}">
-            {{ $dict.name('sys-area-level', row.areaLevel) }}
+            {{ G.getDictLabel('sys-area-level', row.areaLevel) }}
           </template>
         </el-table-column>
 				<el-table-column prop="areaName" label="地区名称（全）" min-width="120" show-overflow-tooltip></el-table-column>
 				<el-table-column label="操作" width="200" class-name="link-menu" fixed="right"
-          v-if="$perms.has('sys-area-edit') || $perms.has('sys-area-delete')">
+          v-if="G.hasPerm('sys-area-edit') || G.hasPerm('sys-area-delete')">
 					<template v-slot="{row}">
-						<el-link v-if="$perms.has('sys-area-edit')" @click="edit(row)" :underline="false" type="primary">修改</el-link>
-            <el-link v-if="$perms.has('sys-menu-add')" @click="addChild(row)" type="primary" :underline="false">添加下级</el-link>
-						<el-link v-if="$perms.has('sys-area-delete')" @click="del(row)" :underline="false" type="danger">删除</el-link>
+						<el-link v-if="G.hasPerm('sys-area-edit')" @click="edit(row)" :underline="false" type="primary">修改</el-link>
+            <el-link v-if="G.hasPerm('sys-menu-add')" @click="addChild(row)" type="primary" :underline="false">添加下级</el-link>
+						<el-link v-if="G.hasPerm('sys-area-delete')" @click="del(row)" :underline="false" type="danger">删除</el-link>
 					</template>
 				</el-table-column>
 			</el-table>

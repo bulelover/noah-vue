@@ -9,7 +9,7 @@
           </el-form>
         </div>
         <div>
-          <el-button v-if="$perms.has('sys-role-add')" type="primary" @click="add">新增</el-button>
+          <el-button v-if="G.hasPerm('sys-role-add')" type="primary" @click="add">新增</el-button>
         </div>
         <!--      <el-checkbox v-model="multiple" label="多选" style="margin-left: 10px"></el-checkbox>-->
       </div>
@@ -17,10 +17,10 @@
         <li v-for="(item,index) in tableData"
             :class="{'infinite-list-item':true, selected: selectedDict.code === item.code}"
             @click="clickDict(item)">{{ index + 1 }}. {{ item.name }} [{{ item.code }}]
-          <span class="link-menu menu-right" v-if="$perms.has('sys-dict-edit') || $perms.has('sys-dict-delete')">
-            <el-link v-if="$perms.has('sys-dict-edit')" :underline="false" @click.stop="edit(item)" type="primary">修改
+          <span class="link-menu menu-right" v-if="G.hasPerm('sys-dict-edit') || G.hasPerm('sys-dict-delete')">
+            <el-link v-if="G.hasPerm('sys-dict-edit')" :underline="false" @click.stop="edit(item)" type="primary">修改
             </el-link>
-            <el-link v-if="$perms.has('sys-dict-delete')" :underline="false" @click.stop="remove(item)" type="danger">删除
+            <el-link v-if="G.hasPerm('sys-dict-delete')" :underline="false" @click.stop="remove(item)" type="danger">删除
             </el-link>
           </span>
         </li>
@@ -33,7 +33,7 @@
         </div>
         <div>
           <el-button @click="fetchItemData" icon="el-icon-refresh"></el-button>
-          <el-button v-if="$perms.has('sys-dict-item-add')" type="primary" @click="addItem">新增</el-button>
+          <el-button v-if="G.hasPerm('sys-dict-item-add')" type="primary" @click="addItem">新增</el-button>
         </div>
         <!--      <el-checkbox v-model="multiple" label="多选" style="margin-left: 10px"></el-checkbox>-->
       </div>
@@ -45,10 +45,10 @@
         <el-table-column prop="remark" label="项目描述" min-width="160"></el-table-column>
         <el-table-column prop="orderBy" label="项目排序" min-width="80"></el-table-column>
         <el-table-column label="操作" min-width="140" class-name="link-menu"
-                         v-if="$perms.has('sys-dict-item-edit') || $perms.has('sys-dict-item-delete')">
+                         v-if="G.hasPerm('sys-dict-item-edit') || G.hasPerm('sys-dict-item-delete')">
           <template v-slot="{row}">
-            <el-link v-if="$perms.has('sys-dict-item-edit')" :underline="false" @click="editItem(row)" type="primary">修改</el-link>
-            <el-link v-if="$perms.has('sys-dict-item-delete')" :underline="false" @click="removeItem(row)" type="danger">删除</el-link>
+            <el-link v-if="G.hasPerm('sys-dict-item-edit')" :underline="false" @click="editItem(row)" type="primary">修改</el-link>
+            <el-link v-if="G.hasPerm('sys-dict-item-delete')" :underline="false" @click="removeItem(row)" type="danger">删除</el-link>
           </template>
         </el-table-column>
       </el-table>

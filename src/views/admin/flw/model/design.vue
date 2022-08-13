@@ -1,9 +1,10 @@
 <template>
   <div class="page-wrapper">
     <div class="white-box full-height" v-loading="loading">
-      <span class="page-title mb16">工作流模型设计（{{this.id?'修改':'新增'}}）</span>
+      <span class="page-title mb16">工作流模型设计（{{view?'查看':this.id?'修改':'新增'}}）</span>
       <!--    <my-process-palette />-->
       <my-process-designer
+          :view="view"
           :key="`designer-${reloadIndex}`"
           :options="{
         taskResizingEnabled: true,
@@ -23,7 +24,7 @@
       >
       </my-process-designer>
       <my-properties-panel :key="`penal-${reloadIndex}`" :bpmn-modeler="modeler" :prefix="controlForm.prefix"
-                           class="process-panel"/>
+                           class="process-panel" :id-edit-disabled="id !== '' && id != undefined"/>
       <!-- demo config -->
 <!--      <div class="demo-control-bar">
         <div class="open-model-button" @click="controlDrawerVisible = true"><i class="el-icon-setting"></i></div>
@@ -103,6 +104,7 @@ export default {
       xmlString: "",
       loading: false,
       modeler: null,
+      view: false,
       reloadIndex: 0,
       controlDrawerVisible: false,
       infoTipVisible: false,
@@ -136,7 +138,9 @@ export default {
     };
   },
   mounted() {
-    this.id = this.$route.query.id;
+    let params = G.getRouterParams(this.$route.params);
+    this.id = params.id;
+    this.view = !!params.view;
     if(this.id){
       this.loading = true;
       FlwModelApi.getById({
@@ -166,7 +170,7 @@ export default {
         },
         callback: (d,msg) => {
           this.id = msg;
-          this.$freshParent();
+          G._freshParent();
           this.$message.success("保存成功");
         },
         complete: () => {

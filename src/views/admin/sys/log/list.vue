@@ -94,7 +94,6 @@ export default {
       }
     },
     view(row) {
-      console.log('')
       // this.$refs.edit.init('view', row.id);
     }
   }

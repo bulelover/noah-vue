@@ -3,10 +3,6 @@ function getPublicIp(ip){
   $('body').append('<script src="http://whois.pconline.com.cn/ipJson.jsp?ip='+ip+'&callback=getIpCallback"></script>');
 }
 function install(Vue, options = {}) {
-  //权限校验方法
-  let permissions;
-  //字典缓存
-  let dictionary = {};
 
   let f = function (_this){
     let parent = _this.parentElement;
@@ -130,60 +126,10 @@ function install(Vue, options = {}) {
 
       }
     },
-    computed: {
-      $perms(){
-        return {
-          has: function (code){
-            if(permissions && permissions.length > 0){
-              return permissions.indexOf(code) > -1;
-            }
-            let str = localStorage.getItem(G.permissions);
-            if(str && str.substring(0,1) === '['){
-              permissions = JSON.parse(str);
-              return permissions.indexOf(code) > -1;
-            }
-            return false;
-          },
-          empty() {
-            permissions = []
-          }
-        }
-      },
-      $dict(){
-        return {
-          list: function (dictCode){
-            if(dictionary && dictionary.length > 0){
-              return dictionary[dictCode];
-            }
-            let str = localStorage.getItem(G.dictionary);
-            if(str && str.substring(0,1) === '{'){
-              dictionary = JSON.parse(str);
-              return dictionary[dictCode];
-            }
-          },
-          name: function (dictCode, itemCode){
-            if(dictionary && dictionary.length > 0 && dictionary[dictCode]){
-              let s = dictionary[dictCode].filter(item => item.code == itemCode);
-              return s && s.length === 1?s[0].name: '--';
-            }
-            let str = localStorage.getItem(G.dictionary);
-            if(str && str.substring(0,1) === '{'){
-              dictionary = JSON.parse(str);
-              if(!dictionary[dictCode]){
-                return '--';
-              }
-              let s = dictionary[dictCode].filter(item => item.code == itemCode);
-              return s && s.length === 1?s[0].name: '--';
-            }
-          },
-          empty(){
-            dictionary = {}
-          }
-        }
-      },
-    },
     mounted: function () {
-      if (this.$el && $(this.$el).is('div.page-wrapper')) {
+      //子路由设置 全局变量存储的路由实例和 重置记忆滚动条
+      if(this.$route && G.getRouter(this.$route.fullPath) && this.exclude === 'exclude'){
+        G.setRouterVm(this.$route.fullPath, this);
         this.scrollMap= {};
         this.scrollSelector=[];
       }

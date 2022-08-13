@@ -1,5 +1,4 @@
 import Vue from 'vue'
-import vm from '../main'
 import VueRouter from 'vue-router'
 import Main from "@/views/Main";
 import $ from "jquery";
@@ -57,7 +56,7 @@ let formatMenus = function (data) {
         if(!G.getRouter(item.url)){
           G.setRouter(item.url, G.copyAsMenu(item));
           router.addRoute('admin',{
-            name: name, path: item.url, component: () => import('../views'+item.url), meta: {code:item.code, name: item.name}
+            name: name, path: item.url, component: () => import('../views'+item.url.replace('/:params','')), meta: {code:item.code, name: item.name}
           });
         }
       }
@@ -85,16 +84,14 @@ router.beforeEach((to, from, next) => {
     next()
     return;
   }
-  console.log(localStorage.getItem('tokenKey'), localStorage.getItem(localStorage.getItem('tokenKey')))
   if (!G.tokenValue) {
     next({name: 'login'})
     return;
   }
   //清除权限、字典
-  if(vm){
-    vm.$perms.empty();
-    vm.$dict.empty();
-  }
+  G.emptyPerm();
+  G.emptyDict();
+
   $api.getLoginData({
     callback:(res) => {
       //权限
@@ -124,10 +121,6 @@ router.beforeEach((to, from, next) => {
 
 //设置相关参数
 router.afterEach((to, from) => {
-  to.meta.parentPath = from.fullPath;
-  if(to.query && to.query.child){
-    to.meta.child = true;
-  }
   if(G.meta[to.name]){
     to.meta.code = G.meta[to.name].code;
     to.meta.name = G.meta[to.name].name;
@@ -137,6 +130,12 @@ router.afterEach((to, from) => {
   }
   if(to.query.title){
     to.meta.name = to.query.title;
+  }
+  if(to.params){
+    let params = G.getRouterParams(to.params);
+    if(params.title){
+      to.meta.name = params.title;
+    }
   }
 })
 

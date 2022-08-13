@@ -4,10 +4,11 @@
       <slot name="control-header"></slot>
       <template v-if="!$slots['control-header']">
         <el-button-group key="file-control">
-          <el-button :size="headerButtonSize" :type="headerButtonType" :loading="saveLoading" @click="saveModel">
+          <el-button :size="headerButtonSize" :type="headerButtonType" :loading="saveLoading" @click="saveModel" v-if="!view">
             <icon-save v-if="!saveLoading"/><span>保存</span>
           </el-button>
-          <el-button :size="headerButtonSize" :type="headerButtonType" icon="el-icon-folder-opened" @click="$refs.refFile.click()">打开</el-button>
+          <el-button :size="headerButtonSize" :type="headerButtonType" icon="el-icon-folder-opened" v-if="!view"
+                     @click="$refs.refFile.click()">打开</el-button>
           <el-tooltip effect="light">
             <div slot="content">
               <el-button :size="headerButtonSize" type="text" @click="downloadProcessAsXml()">下载为XML文件</el-button>
@@ -124,6 +125,10 @@ export default {
     additionalModel: [Object, Array], // 自定义model
     moddleExtension: Object, // 自定义moddle
     onlyCustomizeAddi: {
+      type: Boolean,
+      default: false
+    },
+    view: {
       type: Boolean,
       default: false
     },

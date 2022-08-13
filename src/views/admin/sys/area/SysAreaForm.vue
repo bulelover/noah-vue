@@ -29,7 +29,7 @@
         </el-form-item>
         <el-form-item class="w-ib w-1-2" label="区域等级" prop="areaLevel">
           <el-select v-model="form.areaLevel" placeholder="请选择区域等级" :disabled="true">
-            <el-option v-for="item in $dict.list('sys-area-level')" :key="item.code"
+            <el-option v-for="item in G.getDictList('sys-area-level')" :key="item.code"
                        :label="item.name" :value="parseInt(item.code)"></el-option>
           </el-select>
         </el-form-item>

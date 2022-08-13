@@ -17,7 +17,7 @@
         </el-form-item>
         <el-form-item class="w-ib w-50" label="性别" prop="sex">
           <el-radio-group v-model="form.sex">
-            <el-radio v-for="item in $dict.list('sys-gender')" :key="item.code" :label="item.code">{{item.name}}</el-radio>
+            <el-radio v-for="item in G.getDictList('sys-gender')" :key="item.code" :label="item.code">{{item.name}}</el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item class="w-ib w-50" label="联系电话" prop="phone" maxlength="20" :rules="[]">

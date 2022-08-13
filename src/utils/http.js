@@ -173,6 +173,14 @@ let executeAxiosByType = (type, url, config) => {
   });
 }
 
+/**
+ * config参数详解
+ *  data : 入参
+ *  callback(data, msg) : 操作成功回调函数
+ *  failure(errMsg) : 失败函数，包含操作结果失败 和 请求失败
+ *  complete : 不管成功失败最终都会执行的函数
+ */
+
 //让get支持data传参
 axios['_get'] = (url, config) => {
   if(config.data){
