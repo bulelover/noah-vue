@@ -8,7 +8,7 @@
         <div style="clear: both;"></div>
       </div>
       <span class="page-title mb16 mt32">基本信息</span>
-      <el-form ref="form" :model="form" :rules="rules" label-width="120px" style="width: 800px;">
+      <el-form ref="form" :model="form" :rules="rules" label-width="120px" style="width: 820px;">
         <el-form-item class="w-ib w-50" label="登录名" prop="loginName">
           <el-input v-model="form.loginName" :disabled="true"></el-input>
         </el-form-item>
@@ -17,7 +17,7 @@
         </el-form-item>
         <el-form-item class="w-ib w-50" label="性别" prop="sex">
           <el-radio-group v-model="form.sex">
-            <el-radio v-for="item in G.getDictList('sys-gender')" :key="item.code" :label="item.code">{{item.name}}</el-radio>
+            <el-radio v-for="item in G.getDictList('gender')" :key="item.code" :label="item.code">{{item.name}}</el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item class="w-ib w-50" label="联系电话" prop="phone" maxlength="20" :rules="[]">

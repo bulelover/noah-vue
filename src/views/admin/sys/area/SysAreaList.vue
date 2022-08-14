@@ -19,7 +19,7 @@
 				<el-table-column prop="code" label="区域编号" min-width="100" show-overflow-tooltip></el-table-column>
 				<el-table-column prop="areaLevel" label="区域等级" min-width="80" show-overflow-tooltip>
           <template v-slot="{row}">
-            {{ G.getDictLabel('sys-area-level', row.areaLevel) }}
+            {{ G.getDictLabel('area-level', row.areaLevel) }}
           </template>
         </el-table-column>
 				<el-table-column prop="areaName" label="地区名称（全）" min-width="120" show-overflow-tooltip></el-table-column>

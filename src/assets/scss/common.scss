@@ -136,7 +136,7 @@ body, table{
   min-height: 300px;
   max-height: 90%;
   border-radius: 6px;
-  border: 2px solid #BBBBBB;
+  box-shadow: 0 1px 8px 2px rgb(93, 93, 93);
   overflow: hidden;
   .el-dialog__body {
     height: calc(100% - 106px);
@@ -179,7 +179,7 @@ body, table{
   background: #f1f1f1;
   margin-top: 16px;
   padding: 0 16px 16px;
-  overflow: auto;
+  //overflow: auto;
   top: 0;
   bottom: 0;
   right: 0;
@@ -189,10 +189,10 @@ body, table{
   min-height: 400px;
 }
 .page-title{
-  font-size: 16px;
-  font-weight: Bold;
+  font-size: 18px;
+  //font-weight: Bold;
   color: #333333;
-  letter-spacing: 1px;
+  letter-spacing: 2px;
 }
 span.page-title{
   display: inline-block;
@@ -268,6 +268,81 @@ span.page-title{
     }
   }
 }
+
+.slide-fade{
+  position: absolute;left:0;right: 0;
+}
+.slide-fade-enter-active {
+  transition: all .3s ease;
+}
+.slide-fade-leave-active {
+  //transition: all .1s cubic-bezier(2.0, 0.5, 0.8, 1.0);
+  transition: all .3s ease;
+}
+.slide-fade-enter, .slide-fade-leave-to
+{
+  left:0;right: 0;
+  transform: translateX(50px);
+  opacity: 0;
+}
+
+.page-children{
+  position: absolute;
+  top: 0;
+  left: 16px;
+  right: 16px;
+  bottom: 16px;
+  background: #f1f1f1;
+  border-radius: 5px;
+  z-index: 100;
+  .form-container{
+    position: relative;
+    padding: 16px;
+    background: #ffffff;
+    border-radius: 5px;
+    margin: auto;
+    height: 100%;
+  }
+  .form-title{
+    border-bottom: 1px solid #f1f1f1;
+    margin: 0 -16px 0;
+    padding: 0 16px 12px;
+    line-height: 36px;
+  }
+  .form-body{
+    padding:30px 60px 30px 0;
+    margin-right: -16px;
+    height: calc(100% - 36px);
+    overflow: auto;
+  }
+  .form-body.same-padding{
+    padding: 30px;
+  }
+}
+
+.back-slip {
+  position: relative;
+  margin-right: 20px;
+  font-size: 16px;
+  color: #666666;
+  cursor: pointer;
+}
+.back-slip:hover{
+  color: #333333;
+}
+
+.back-slip:after {
+  content: "";
+  position: absolute;
+  cursor: default;
+  width: 1px;
+  height: 12px;
+  right: -14px;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: #dcdfe6;
+}
+
 .white-box{
   background-color: #ffffff;
   padding: 16px;
@@ -288,7 +363,7 @@ span.page-title{
 .flex3{
   flex:1;
 }
-.search-flex{
+.search-flex,.form-title{
   display: flex;
   div:first-child{
     flex: 1;
@@ -664,4 +739,15 @@ a.el-link.left:before {
 
 .el-select{
   width: 100%;
+}
+
+//1100分辨率（大于960px，小于1199px）
+@media screen and (min-width:1200px){
+
+}
+
+@media only screen and (max-width: 1200px) {
+  .page-wrapper{
+    overflow: auto;
+  }
 }

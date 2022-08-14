@@ -26,7 +26,6 @@
 </template>
 
 <script>
-import store from "@/utils/store";
 
 export default {
   name: "ThemeDrawer",
@@ -50,8 +49,8 @@ export default {
       this.steepV = this.steep;
       this.whiteV = this.white;
       this.positionV = this.position;
-      this.drawer = true;
       this.checked = this.multiTab;
+      this.drawer = true;
     },
     setMultiTab(v){
       G.setMultiTab(v?'1':'0');
@@ -59,6 +58,7 @@ export default {
     },
     setWhite(v){
       G.setWhite(v?'1':'0');
+      this.$emit('update', 'white', v);
       if(v){
         document.body.classList.add('white-theme');
       }else {

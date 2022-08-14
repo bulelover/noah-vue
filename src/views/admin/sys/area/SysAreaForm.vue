@@ -16,20 +16,20 @@
           <el-input v-model="form.pName" placeholder="请输入父级名称" :disabled="true"></el-input>
         </el-form-item>
         <el-form-item class="w-ib w-1-2" label="区域编号" prop="code">
-          <el-input v-model="form.code" placeholder="请输入区域编号"></el-input>
+          <el-input v-model="form.code" placeholder="请输入区域编号" maxlength="20"></el-input>
         </el-form-item>
         <el-form-item class="w-ib w-1-2" label="区域名称" prop="name">
-          <el-input v-model="form.name" placeholder="请输入区域名称"></el-input>
+          <el-input v-model="form.name" placeholder="请输入区域名称" maxlength="30"></el-input>
         </el-form-item>
         <el-form-item class="w-ib w-1-2" label="地区全称" prop="areaName">
-          <el-input v-model="form.areaName" placeholder="请输入地区名称（全）"></el-input>
+          <el-input v-model="form.areaName" placeholder="请输入地区名称（全）" maxlength="100"></el-input>
         </el-form-item>
         <el-form-item class="w-ib w-1-2" label="拼音码" prop="pinyin">
           <el-input v-model="form.pinyin" placeholder="请输入拼音码"></el-input>
         </el-form-item>
         <el-form-item class="w-ib w-1-2" label="区域等级" prop="areaLevel">
           <el-select v-model="form.areaLevel" placeholder="请选择区域等级" :disabled="true">
-            <el-option v-for="item in G.getDictList('sys-area-level')" :key="item.code"
+            <el-option v-for="item in G.getDictList('area-level')" :key="item.code"
                        :label="item.name" :value="parseInt(item.code)"></el-option>
           </el-select>
         </el-form-item>

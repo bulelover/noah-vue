@@ -14,9 +14,12 @@
 <!--          node-key="id"-->
 <!--          :default-checked-keys="selected">-->
 <!--      </el-tree>-->
-      <div style="text-align: right;margin-bottom: 10px;">
+      <span style="width: 25%;display: inline-block;">
+        {{name}}
+      </span>
+      <span style="width: 75%;display: inline-block;text-align: right;margin-bottom: 10px;">
         开启级联选择，一般第一次设置权限时使用：<el-switch v-model="checkCascade" @change="checkCascadeChange"></el-switch>
-      </div>
+      </span>
       <el-cascader-panel v-if="panelShow" ref="tree" v-model="selected" :options="menus"
                          :props="{ multiple: true, checkStrictly: !checkCascade, value: 'id' }">
         <template v-slot="{ node, data }">
@@ -43,6 +46,7 @@ export default {
       checkCascade: false,
       panelShow: true,
       id: '',
+      name: '',
       title: '角色授权',
       menus: [],
       selected: [],
@@ -55,8 +59,9 @@ export default {
         this.panelShow = true;
       })
     },
-    init(id){
+    init(id, name){
       this.id = id;
+      this.name = name;
       this.visible = true;
       this.loading = true;
       SysRoleApi.getMenusByRoleId({

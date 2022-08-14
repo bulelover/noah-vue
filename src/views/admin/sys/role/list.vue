@@ -126,7 +126,7 @@ export default {
     auth(row) {
       this.authVisible = true
       this.$nextTick(()=>{
-        this.$refs.auth.init(row.id);
+        this.$refs.auth.init(row.id, row.name);
       })
     },
     edit(row) {

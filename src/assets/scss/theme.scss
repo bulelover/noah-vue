@@ -427,7 +427,7 @@
       background-color: themed('light-color-2');
     }
   }
-  .page-wrapper,.main-body,.el-main,.el-tag--plain.el-tag--info{
+  .page-wrapper,.page-children,.main-body,.el-main,.el-tag--plain.el-tag--info{
     @include themeSetting($themes) {
       background-color: transparent;
       //background-color: themed('button-disabled-color');

@@ -1,6 +1,6 @@
 <template>
   <div class="page-wrapper">
-    <div class="white-box full-height">
+    <div class="white-box full-height" v-show="!(editVisible || assignRolesVisible)">
       <span class="page-title mb16">用户列表</span>
       <div class="search-flex mb16">
         <div class="search-group">
@@ -19,7 +19,7 @@
         </div>
         <!--      <el-checkbox v-model="multiple" label="多选" style="margin-left: 10px"></el-checkbox>-->
       </div>
-      <el-table ref="table" border :data="tableData" v-loading="tableLoading" row-key="id" :height="G.tableHeight" >
+      <el-table ref="table" border :data="tableData" v-loading="tableLoading" row-key="id" :height="G.tableHeight">
         <!-- :row-class-name="G.rowClass"       -->
         <!--        <el-table-column width="50" align="center">
                   <template slot="header" v-if="multiple">
@@ -39,7 +39,8 @@
         <el-table-column prop="realName" label="真实姓名" min-width="120">
           <template v-slot="{row}">
             <el-link type="primary" v-if="G.hasPerm('sys-user-view')"
-                  :underline="false" @click="view(row)">{{ row.realName}}</el-link>
+                     :underline="false" @click="view(row)">{{ row.realName }}
+            </el-link>
             <template v-else>{{ row.realName }}</template>
           </template>
         </el-table-column>
@@ -47,7 +48,7 @@
         <el-table-column prop="sex" label="性别" min-width="70">
           <template v-slot="{row}">
             <i :class="['mr6',row.sex === '1'?'el-icon-male primary':'el-icon-female danger']"></i
-            >{{ G.getDictLabel('sys-gender', row.sex) }}
+            >{{ G.getDictLabel('gender', row.sex) }}
           </template>
         </el-table-column>
         <el-table-column prop="phone" label="联系电话" min-width="120"></el-table-column>
@@ -69,11 +70,10 @@
         <el-table-column prop="position" label="岗位" min-width="150" show-overflow-tooltip></el-table-column>
         <el-table-column prop="mail" label="电子邮箱" min-width="150" show-overflow-tooltip></el-table-column>
         <el-table-column prop="mail" label="操作" :width="toolbarWidth" class-name="link-menu" fixed="right"
-          v-if="toolbarWidth > 0">
+                         v-if="toolbarWidth > 0">
           <template v-slot="{row}">
             <el-link v-if="G.hasPerm('sys-user-edit')" :underline="false" type="primary" @click="edit(row)">修改</el-link>
-            <el-link v-if="G.hasPerm('sys-user-role')" :underline="false" type="primary" @click="assignRoles(row)">
-              分配角色
+            <el-link v-if="G.hasPerm('sys-user-role')" :underline="false" type="primary" @click="assignRoles(row)">分配角色
             </el-link>
             <el-link v-if="G.hasPerm('sys-user-delete')" :underline="false" type="danger" @click="del(row)">删除</el-link>
           </template>
@@ -89,8 +89,16 @@
         ></el-pagination>
       </div>
     </div>
-    <edit v-if="editVisible" ref="edit" @refreshTable="fetchData"></edit>
-    <assign-roles v-if="assignRolesVisible" ref="assignRoles"></assign-roles>
+    <transition name="slide-fade">
+      <div class="page-children" v-show="editVisible">
+        <edit v-if="editVisible" ref="edit" @refreshTable="fetchData"></edit>
+      </div>
+    </transition>
+    <transition name="slide-fade">
+      <div class="page-children" v-show="assignRolesVisible">
+        <assign-roles v-if="assignRolesVisible" ref="assignRoles"></assign-roles>
+      </div>
+    </transition>
   </div>
 </template>
 
@@ -98,6 +106,7 @@
 import SysUserApi from './'
 import edit from './edit'
 import AssignRoles from './AssignRoles'
+
 export default {
   components: {
     edit, AssignRoles
@@ -133,16 +142,16 @@ export default {
       tableData: [],
     }
   },
-  computed:{
-    toolbarWidth(){
+  computed: {
+    toolbarWidth() {
       let perms = [
-          [G.hasPerm('sys-user-edit'), 60],
-          [G.hasPerm('sys-user-role'), 90],
-          [G.hasPerm('sys-user-delete'), 60],
-        ],
-        width = 0;
+            [G.hasPerm('sys-user-edit'), 60],
+            [G.hasPerm('sys-user-role'), 90],
+            [G.hasPerm('sys-user-delete'), 60],
+          ],
+          width = 0;
       perms.forEach(v => {
-        if(v[0]) width += v[1];
+        if (v[0]) width += v[1];
       })
       return width;
     }

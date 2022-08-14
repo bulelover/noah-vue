@@ -8,6 +8,60 @@ let permissions;
 let dictionary = {};
 
 const toolFunctions = {
+  validator: {
+    required(trigger, message){
+      return [{
+        required: true,
+        trigger: trigger || 'blur',
+        message: message || '不能为空',
+        transform(value) {return value.trim()}
+      }]
+    },
+    letters(trigger, message){
+      return [{
+        trigger: trigger || 'blur',
+        type: 'string',
+        pattern: /^[a-z]+$/i,
+        message: message || '只能输入字母',
+        transform(value) {return value.trim()}
+      }]
+    },
+    email(trigger, message){
+      return [{
+        trigger: trigger || 'blur',
+        type: 'email',
+        message: message || '邮箱格式有误',
+        transform(value) {return value.trim()}
+      }]
+    },
+    phone(trigger, message){
+      return [{
+        trigger: trigger || 'blur',
+        type: 'string',
+        pattern: /(^((\d{11})|(\d{7,8})|(\d{4}|\d{3})-(\d{7,8}))$)/,
+        message: message || '电话或手机号格式有误',
+        transform(value) {return value.trim()}
+      }]
+    },
+    mobile(trigger, message){
+      return [{
+        trigger: trigger || 'blur',
+        type: 'string',
+        pattern: /^1[3-9]\d{9}$/,
+        message: message || '手机号格式有误',
+        transform(value) {return value.trim()}
+      }]
+    },
+    fixedPhone(trigger, message){
+      return {
+        trigger: trigger || 'blur',
+        type: 'string',
+        pattern: /^(?:(?:0\d{2,3}[\- ]?[1-9]\d{6,7})|(?:[48]00[\- ]?[1-9]\d{6}))$/,
+        message: message || '固定电话格式有误',
+        transform(value) {return value.trim()}
+      }
+    }
+  },
   /**
    * 清除keep-alive中某个组件的缓存，逻辑参考 keep-alive 的源码实现
    * @param { VNode } instance 需要清除的组件的实例对象，这个组件应为 keep-alive 的直接子组件
