@@ -123,13 +123,10 @@ export default {
         // parentName: '',
         size: 10,
         current: 1,
-        // orders: [{
-        //   column: 'code',
-        //   type: 'asc'
-        // }, {
-        //   column: 'code2',
-        //   type: 'asc'
-        // }]
+        orders: [{
+          column: 'loginName',
+          type: 'asc'
+        }]
       },
       tableLoading: false,
       total: 0,

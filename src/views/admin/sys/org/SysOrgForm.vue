@@ -11,14 +11,14 @@
           <el-button :disabled="loading || saveLoading" @click="close">取消</el-button>
         </div>
       </div>
-      <el-form class="form-body" ref="form" :model="form" :rules="rules" label-width="120px" :disabled="isView">
-                  <el-form-item class="w-ib w-1-2" label="组织代码" prop="code">
-          <el-input v-model="form.code" placeholder="请输入组织机构代码"
-                    maxlength="20" show-word-limit @blur="updateSearchCode"></el-input>
-        </el-form-item>
+      <el-form class="form-body" ref="form" :model="form" :rules="rules" label-width="120px" :disabled="isView" v-if="!loading">
         <el-form-item class="w-ib w-1-2" label="组织名称" prop="name">
           <el-input v-model="form.name" placeholder="请输入组织/企业/单位名称"
                     maxlength="50" show-word-limit @blur="updateSearchCode"></el-input>
+        </el-form-item>
+        <el-form-item class="w-ib w-1-2" label="组织代码" prop="code">
+          <el-input v-model="form.code" placeholder="请输入组织机构代码"
+                    maxlength="20" show-word-limit @blur="updateSearchCode"></el-input>
         </el-form-item>
         <el-form-item class="w-ib w-1-2" label="组织类型" prop="type">
           <el-select v-model="form.type" placeholder="请选择组织类型" clearable>
@@ -26,9 +26,17 @@
                        :label="item.name" :value="item.code"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item class="w-ib w-1-2" label="状态" prop="state">
-          <el-switch v-model="form.state" active-text="正常" inactive-text="锁定" active-value="1"
-                     inactive-value="0"></el-switch>
+        <el-form-item class="w-ib w-1-2" label="上级机构" prop="parentId">
+          <OrgTreeSelector v-model="form.parentId" root="all" :name.sync="form.parentName" clearable></OrgTreeSelector>
+        </el-form-item>
+        <el-form-item class="w-ib w-1-2" label="所属地区" prop="areaCode">
+          <AreaTreeSelector v-model="form.areaCode" root="all" :area-name.sync="form.areaName" clearable></AreaTreeSelector>
+        </el-form-item>
+        <el-form-item class="w-ib w-1-2" label="行业性质" prop="industry">
+          <el-select v-model="form.industry" placeholder="请选择行业性质" clearable>
+            <el-option v-for="item in G.getDictList('industry')" :key="item.code"
+                       :label="item.name" :value="item.code"></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item class="w-ib w-1-2" label="法定代表人" prop="legalRepresentative">
           <el-input v-model="form.legalRepresentative" placeholder="请输入法定代表人"
@@ -43,17 +51,9 @@
                           format="yyyy 年 MM 月 dd 日" value-format="yyyy-MM-dd" style="width: 100%;">
           </el-date-picker>
         </el-form-item>
-        <el-form-item class="w-ib w-1-2" label="行政区划代码" prop="areaCode">
-          <el-input v-model="form.areaCode" placeholder="请输入行政区划代码"
-                    maxlength="20"></el-input>
-        </el-form-item>
-        <el-form-item class="w-ib w-1-2" label="行政区划名称" prop="areaName">
-          <el-input v-model="form.areaName" placeholder="请输入行政区划名称"
-                    maxlength="20"></el-input>
-        </el-form-item>
         <el-form-item class="w-ib w-1-2" label="地址" prop="address">
           <el-input v-model="form.address" placeholder="请输入地址"
-                    maxlength="20"></el-input>
+                    maxlength="50" show-word-limit></el-input>
         </el-form-item>
         <el-form-item class="w-ib w-1-2" label="联系方式" prop="phone">
           <el-input v-model="form.phone" placeholder="请输入联系电话/手机号"
@@ -67,31 +67,25 @@
           <el-input v-model="form.mail" placeholder="请输入邮箱"
                     maxlength="20"></el-input>
         </el-form-item>
-        <el-form-item class="w-ib w-1-2" label="行业性质" prop="industry">
-          <el-select v-model="form.industry" placeholder="请选择行业性质" clearable>
-            <el-option v-for="item in G.getDictList('industry')" :key="item.code"
-                       :label="item.name" :value="item.code"></el-option>
-          </el-select>
-        </el-form-item>
         <el-form-item class="w-ib w-1-2" label="简称" prop="abbreviation">
           <el-input v-model="form.abbreviation" placeholder="请输入简称"
-                    maxlength="20"></el-input>
+                    maxlength="4" show-word-limit></el-input>
         </el-form-item>
-        <el-form-item class="w-ib w-1-2" label="企业logo（图片ID）" prop="logo">
-          <el-input v-model="form.logo" placeholder="请输入企业logo（图片ID）"
+<!--        <el-form-item class="w-ib w-1-2" label="企业logo" prop="logo">
+          <el-input v-model="form.logo" placeholder="请输入企业logo"
                     maxlength="20"></el-input>
-        </el-form-item>
-        <el-form-item class="w-ib w-1-2" label="父级主键" prop="parentId">
-          <el-input v-model="form.parentId" placeholder="请输入父级主键"
-                    maxlength="20"></el-input>
-        </el-form-item>
-        <el-form-item class="w-ib w-1-2" label="备注" prop="remarks">
+        </el-form-item>-->
+        <el-form-item class="w-ib w-1-1" label="备注" prop="remarks">
           <el-input v-model="form.remarks" placeholder="请输入备注"
-                    maxlength="20"></el-input>
+                    maxlength="100" show-word-limit></el-input>
         </el-form-item>
         <el-form-item class="w-ib w-1-2" label="搜索码" prop="remarks">
           <el-input v-model="form.searchCode" placeholder="请输入搜索码"
                     maxlength="300"></el-input>
+        </el-form-item>
+        <el-form-item class="w-ib w-1-2" label="状态" prop="state">
+          <el-switch v-model="form.state" active-text="正常" inactive-text="锁定" active-value="1"
+                     inactive-value="0"></el-switch>
         </el-form-item>
       </el-form>
     </div>
@@ -100,8 +94,13 @@
 
 <script>
   import SysOrgApi from './'
+  import AreaTreeSelector from "@/components/common/AreaTreeSelector";
+  import OrgTreeSelector from "@/components/common/OrgTreeSelector";
   import { pinyin } from 'pinyin-pro';
   export default {
+    components:{
+      AreaTreeSelector,OrgTreeSelector
+    },
     data() {
       return {
         loading: false,
@@ -113,7 +112,7 @@
           code: [],
           name: G.validator.required('blur', '组织名称不能为空'),
           type: G.validator.required('blur', '组织类型不能为空'),
-          // areaCode: [{required: false, trigger: 'blur', message: '行政区划不能为空'}],
+          areaCode: G.validator.required('change', '所属地区不能为空'),
           phone: G.validator.phone(),
           mail: G.validator.email(),
         },
@@ -136,6 +135,7 @@
           abbreviation: '',
           logo: '',
           parentId: '',
+          parentName: '',
           remarks: '',
           searchCode: '',
         },

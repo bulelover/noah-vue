@@ -8,6 +8,17 @@ let permissions;
 let dictionary = {};
 
 const toolFunctions = {
+  getHttpOptions(){
+    return {
+      data: {},
+      //(data, msg)=>{}
+      callback: null,
+      // (error)=>{}
+      failure: null,
+      //()=>{}
+      complete: null
+    }
+  },
   validator: {
     required(trigger, message){
       return [{

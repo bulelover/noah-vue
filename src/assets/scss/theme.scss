@@ -311,6 +311,14 @@
   }
 }
 
+.main-context-menu span:hover{
+  @include themeSetting($themes) {
+    //color: themed('text-color');
+    background-color: themed('light-color');
+    //border-color: themed('button-disabled-color');
+  }
+}
+
 .menu-tag:hover{
   @include themeSetting($themes) {
     //color: themed('text-color');

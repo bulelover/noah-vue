@@ -51,10 +51,12 @@
         </div>
         <div class="app-recent-tab" ref="scrollObj">
           <template v-for="(t,i) in tabs">
-            <el-tag :key="i" v-if="i===0" size="—" @click="openMenu(t)" :class="{'menu-tag ':true, 'tag-selected': currentRoutePath === t.url}"
+            <el-tag @contextmenu.native="handleContextmenu(t, $event)" :key="i" v-if="i===0" size="—"
+                    @click="openMenu(t)" :class="{'menu-tag ':true, 'tag-selected': currentRoutePath === t.url}"
                     type="info" effect="plain"
             ><i class="el-icon el-icon-s-home"></i> 首页</el-tag>
-            <el-tag :key="i" v-else size="—"  closable @click="openMenu(t)" :class="{'menu-tag ':true, 'tag-selected': currentRoutePath === t.url}"
+            <el-tag @contextmenu.native="handleContextmenu(t, $event)" :key="i" v-else size="—"  closable
+                    @click="openMenu(t)" :class="{'menu-tag ':true, 'tag-selected': currentRoutePath === t.url}"
                     type="info" effect="plain"
                     :disable-transitions="false" @close="tabClose(t)">
               <i v-if="t.icon && t.icon.indexOf('el-icon') === 0" :class="'el-icon ' + t.icon"></i>
@@ -66,6 +68,18 @@
         <div v-if="haScroll"  class="app-tab-scroll" @click="scrollRight">
           <i class="el-icon el-icon-arrow-right"></i>
         </div>
+      </div>
+      <div v-show="contextmenuFlag" class="main-context-menu" tabindex = "-1" @blur="contextmenuFlag = false"
+           :style="{left: contentMenuX+'px',top: contentMenuY+'px'}" ref="contextMenu">
+        <span v-if="currentRoutePath === selectTabUrl" @click="tabsRefreshCurrentHandle">
+          <i class="el-icon-refresh-right mr12"></i>刷新
+        </span>
+        <span v-if="selectTabUrl !== G.home.url" @click="tabsCloseCurrentHandle">
+          <i class="el-icon-close mr12"></i>关闭标签页
+        </span>
+        <span @click="tabsCloseOtherHandle"><i class="el-icon-close mr12"></i>关闭其它标签页</span>
+        <span @click="tabsCloseRightHandle"><i class="el-icon-close mr12"></i>关闭右侧标签页</span>
+        <span @click="tabsCloseAllHandle"><i class="el-icon-close mr12"></i>关闭全部标签页</span>
       </div>
       <el-main :style="'left: '+$theme.lmWidth+';top:'+(this.multiTab?'40px':'0')" ref="main">
         <div class="app-current-p" v-if="position">
@@ -105,6 +119,10 @@ export default {
   components: {TreeMenu,ThemeDrawer},
   data() {
     return {
+      contentMenuX: 0,
+      contentMenuY: 0,
+      selectTabUrl: '',
+      contextmenuFlag: false,
       isCollapse: false,
       tabs: [G.home],
       menus: [],
@@ -339,9 +357,10 @@ export default {
       if(cur || this.currentMeta.code === 'error-page'){
         let isOpened = false;
         //跳转父级
-        let pTab = this.getTabByUrl(t.url);
-        if(pTab && pTab.closeToParent){
-          this.openMenu(this.getTabByUrl(t.parentPath))
+        let tab = this.getTabByUrl(t.url);
+        let pTab = this.getTabByUrl(t.parentPath);
+        if(tab && tab.closeToParent && pTab){
+          this.openMenu(pTab)
           isOpened = true;
         }
         //跳转前面一个
@@ -391,6 +410,80 @@ export default {
         this.haScroll = this.$refs.scrollObj.scrollWidth > this.$refs.scrollObj.clientWidth;
       }
     },
+    handleContextmenu(tab, event){
+      event.preventDefault()
+      event.stopPropagation()
+      this.contentMenuX = event.clientX
+      this.contentMenuY = event.clientY
+      this.selectTabUrl = tab.url
+      this.contextmenuFlag = true
+      this.$nextTick(()=>{
+        this.$refs.contextMenu.focus()
+      })
+    },
+
+    tabsRefreshCurrentHandle(){
+      this.contextmenuFlag = false
+      this.reLoadPage()
+    },
+
+    tabsCloseCurrentHandle(){
+      this.contextmenuFlag = false
+      let tab = this.getTabByUrl(this.selectTabUrl);
+      this.tabClose(tab);
+    },
+
+    tabsCloseOtherHandle(){
+      this.contextmenuFlag = false
+      this.closeTabHandle('other')
+      this.openMenu(this.getTabByUrl(this.selectTabUrl))
+    },
+
+    tabsCloseRightHandle(){
+      this.contextmenuFlag = false
+      this.closeTabHandle('right')
+      if(this.getTabByUrl(this.currentRoutePath) == null){
+        this.openMenu(this.getTabByUrl(this.selectTabUrl))
+      }
+    },
+
+    tabsCloseAllHandle(){
+      this.contextmenuFlag = false
+      this.closeTabHandle('all')
+      this.openMenu(this.tabs[0])
+    },
+
+    closeTabHandle(type){
+      let index = [], url = [], isRight = false;
+      this.tabs.forEach( (t,i) => {
+        if(type === 'other' && (t.url === this.selectTabUrl || t.url === G.home.url)){
+          return;
+        }
+        if(type === 'all' && t.url === G.home.url){
+          return;
+        }
+        if(type === 'right' && !isRight){
+          if(t.url === this.selectTabUrl){
+            isRight = true;
+          }
+          return;
+        }
+        index.unshift(i);
+        url.push(t.url);
+      })
+
+      index.forEach( v => {
+        this.tabs.splice(v, 1);
+      })
+      this.$nextTick(()=>{
+        url.forEach( v => {
+          //关闭后清除keep-alive组件缓存
+          G.clearAliveCache(G.getRouterVm(v))
+        })
+      })
+    }
+
+
   }
 }
 </script>
@@ -411,6 +504,23 @@ export default {
 }
 .recent-menu:hover{
   color: #409EFF;
+}
+
+.main-context-menu{
+  outline: none;
+  position: fixed;
+  background: #ffffff;
+  z-index: 999;
+  width: 160px;
+  box-shadow: 1px 1px 6px 0 #999999;
+  border-radius: 4px;
+  span {
+    font-size: 14px;
+    display: inline-block;
+    padding: 12px;
+    width: 100%;
+    cursor: pointer;
+  }
 }
 
 .main-body {
